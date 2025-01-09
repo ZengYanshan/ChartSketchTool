@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css?family=Baloo+Bhaina|Source+Sans+Pro:400,600');
+/* @import url('https://fonts.googleapis.com/css?family=Baloo+Bhaina|Source+Sans+Pro:400,600'); */
+@import url('font.css');
 @import url('normalize.css');
 @import url('wenk.min.css');
 @import url('lity.min.css');
@@ -9,7 +10,22 @@
 html {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
+
+    /* font-size: calc(100vw / 80); */
 }
+
+@media screen and (orientation: landscape) {
+    html {
+        font-size: calc(100vw / 80); /* 横屏时的字体大小 */
+    }
+}
+
+@media screen and (orientation: portrait) {
+    html {
+        font-size: calc(100vw / 24); /* 竖屏时的字体大小 */
+    }
+}
+
 
 *,
 *:before,
@@ -43,7 +59,7 @@ body {
     display: none;
 }
 
-header,
+/* header,
 footer {
     text-align: center;
 }
@@ -66,7 +82,7 @@ header h1 {
 header p {
     font-size: 15px;
     margin-bottom: 75px;
-}
+} */
 
 .draweditor-area {
     display: -webkit-box;
@@ -102,7 +118,7 @@ button,
 #save {
     color: #fff;
     background: rgba(234, 144, 133, 1);
-    font-size: 16px;
+    /* font-size: 16px; */
     border: none;
     padding: 7px 15px;
     border-radius: 5px;
@@ -226,7 +242,7 @@ select:focus {
     margin-top: 10px;
 }
 
-footer {
+/* footer {
     margin-top: 75px;
     margin-bottom: 10px;
     font-size: 15px;
@@ -249,7 +265,7 @@ footer p.about {
 
 #about p {
     font-size: 18px;
-}
+} */
 
 .svg-icon {
     width: 15px;
