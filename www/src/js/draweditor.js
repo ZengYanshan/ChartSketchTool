@@ -1,7 +1,26 @@
+function insertCanvasHtml() {
+    // 根据横竖比例调整canvas大小
+    if (window.innerWidth < 768) {
+        var canvasWidth = window.innerWidth * 0.8;
+        var canvasHeight = window.innerHeight * 0.4;
+    } else {
+        var canvasWidth = window.innerWidth * 0.4;
+        var canvasHeight = window.innerHeight * 0.8;
+    }
+    const canvasHtml = `<canvas id="c" width="${canvasWidth}" height="${canvasHeight}"></canvas>`;
+    document.getElementById('canvas-container').innerHTML = canvasHtml;
+}
+
+// 禁止移动端浏览器处理滑动手势
 $(document).on("vmousemove", "body", function(e) {
     e.stopPropagation();
     e.preventDefault();
     return false;
+});
+
+// 窗口大小改变时自动刷新
+window.addEventListener("resize", (event) => {
+    location.reload();
 });
 
 
@@ -10,6 +29,8 @@ $(function () {
     $(".loader").fadeOut(500, function () {
         $(".page_wrapper").show();
     });
+
+    insertCanvasHtml();
 
     // create a canvas 创建画布
     var canvas = new fabric.Canvas('c', {
@@ -32,7 +53,7 @@ $(function () {
         }
     });
 
-    // canvas background color
+    // canvas background color 背景色区域
     $('.canvas-background-color').minicolors({
         defaultValue: '#fff',
     });
@@ -196,11 +217,11 @@ $(function () {
     });
 });
 
-// confirmation before closing the tab
-window.onbeforeunload = function (e) {
-    e = e || window.event;
-    if (e) {
-        e.returnValue = 'Sure?';
-    }
-    return 'Sure?';
-};
+// 关闭网页前确认
+// window.onbeforeunload = function (e) {
+//     e = e || window.event;
+//     if (e) {
+//         e.returnValue = 'Sure?';
+//     }
+//     return 'Sure?';
+// };
