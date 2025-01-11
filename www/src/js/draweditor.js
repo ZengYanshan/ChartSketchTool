@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 function insertCanvasHtml() {
     var canvasContainer = document.getElementById('canvas-container');
 
@@ -19,8 +28,32 @@ function insertCanvasHtml() {
     canvasContainer.innerHTML = canvasHtml;
 }
 
+// 保存图片
+function saveImage(base64Data) {
+    if (confirm('Are you sure to save canvas?')) {
+        var img = new Image();
+        img.src = base64Data;
+        img.setAttribute('crossOrigin', 'Anonymous');  // 解决跨域
+        window.cordova.base64ToGallery(
+            base64Data,
+            {
+                prefix: 'img_',
+                mediaScanner: true
+            },
+            function (path) {
+                console.log(path);
+                alert('success');
+            },
+            function (err) {
+                console.error(err);
+                alert('fail');
+            }
+        );
+    }
+}
+
 // 禁止移动端浏览器处理滑动手势
-$(document).on("vmousemove", "body", function(e) {
+$(document).on("vmousemove", "body", function (e) {
     e.stopPropagation();
     e.preventDefault();
     return false;
@@ -80,10 +113,10 @@ $(function () {
         var x = $('.ezdz-dropzone img').attr('src');
         canvas.setBackgroundImage(x,
             canvas.renderAll.bind(canvas), {
-                width: 500,
-                height: 400,
-                backgroundImageStretch: false
-            });
+            width: 500,
+            height: 400,
+            backgroundImageStretch: false
+        });
 
         $("#c").css("border", "none");
         return false;
@@ -209,9 +242,14 @@ $(function () {
         return false;
     });
 
-    // clear canvas 按钮
-    $("#delete-all").click(function () {
-        if (confirm('Are you sure?')) {
+    // undo 按钮
+    $("#undo").click(function () {
+        alert("undo");
+    });
+
+    // clear 按钮
+    $("#clear").click(function () {
+        if (confirm('Are you sure to clear canvas?')) {
             canvas.backgroundImage = false;
             canvas.clear();
         }
@@ -219,17 +257,38 @@ $(function () {
     });
 
     // save 按钮
-    // $("#save").click(function () {
-    //     console.log("save");
-
-    //     const persistent = `${cordova.file.externalRootDirectory}`;
-
-    // });
-
-    // save canvas as image 按钮
     $("#save").click(function () {
-        $("#save").attr("href", canvas.toDataURL());
-        $("#save").attr("download", "draweditor")
+        alert("saving");
+
+        // 申请权限
+        var permissions = cordova.plugins.permissions;
+        var permissionList = [
+            permissions.CAMERA,
+            permissions.WRITE_EXTERNAL_STORAGE
+        ]
+        permissions.checkPermission(permissions.CAMERA, function (s) {
+            if (!s.hasPermission) {
+                permissions.requestPermission(permissions.CAMERA, function (s) {
+                    if (s.hasPermission) {
+                        // 调用保存图片的方法
+                        saveImage(canvas.toDataURL());
+                    } else {
+                        alert('申请失败');
+                    }
+                }, function (error) {
+                    alert(error);
+                });
+            } else {
+                // 调用保存图片的方法
+                saveImage(canvas.toDataURL());
+            }
+        }, function (error) {
+            alert(error);
+        });
+
+        // $("#save").attr("href", canvas.toDataURL());
+        // console.log(canvas.toDataURL());
+        // $("#save").attr("download", "draweditor");
     });
 });
 
