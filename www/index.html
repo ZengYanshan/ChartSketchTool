@@ -99,30 +99,55 @@
             <section class="draweditor-area">
                 <!-- 左栏 -->
                 <section class="left-column">
-                    <!-- 拖拽放入图片/显示图片区域 -->
+
+                    <!-- 序号与前后按钮 -->
+                    <div class="wrap-area wrap-index">
+                        <button id="previous">
+                            <img class="svg-icon" src="src/img/previous.svg">
+                        </button>
+
+                        <div class="index-title">123 / 500</div>
+
+                        <button id="next">
+                            <img class="svg-icon" src="src/img/next.svg">
+                        </button>
+                    </div>
+
+                    <!-- 描述 -->
+                    <div class="wrap-area wrap-description">
+                        <div>
+                            <div>ID: 123</div>
+                            <div>Description: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis repellendus, sed doloribus eos pariatur omnis!</div>
+                        </div>
+                        <div>Please sketch on the chart, and save it after sketching.</div>
+                    </div>
+
+                    <!-- 拖拽放入图片/显示图片区域 
                     <div class="wrap-area wrap-drop">
                         <input type="file" onchange="previewFile()" name="image"
                             accept="image/jpeg , image/jpg , image/png">
                         <br>
-                    </div>
-                    <!-- 按钮区域 -->
+                    </div>-->
+                    
+                    <!-- 背景按钮区域 
                     <div class="wrap-area wrap-image-buttons">
-                        <!-- “将图片作为背景”按钮 -->
                         <button id="image-background">
                             <img class="svg-icon" src="src/img/background.svg"> Make Background Image
                         </button>
-                        <!-- “将图片作为元素加入”按钮 -->
                         <button id="image-on">
                             <img class="svg-icon" src="src/img/image.svg"> Add Image
                         </button>
                     </div>
-                    <!-- 纯色背景区域 -->
+                    -->
+
+                    <!-- 纯色背景区域 
                     <div class="wrap-area wrap-canvas-background-color">
                         <p>or choose a background color</p>
                         <input type="text" class="canvas-background-color" data-control="hue">
                     </div>
+                    -->
 
-                    <!-- 文本区域 -->
+                    <!-- 文本区域 
                     <div class="wrap-area wrap-text">
                         <input type="text" id="text" placeholder="Write your text and hit enter" />
                         <label for="text-color">
@@ -135,24 +160,29 @@
                             <option value="Comic Sans Ms">Comic Sans MS</option>
                         </select>
                     </div>
+                    -->
 
-                    <!-- 绘画区域 -->
+                    <!-- 绘画区域 
                     <div class="wrap-area wrap-modes">
-                        <!-- “选择模式”按钮 -->
+                        <!- “选择模式”按钮 
                         <button id="selection">
                             <img class="svg-icon" src="src/img/selection.svg"> Selection Mode
                         </button>
-                        <!-- “绘画模式”按钮 -->
+                        ->
+
+                        <!- “绘画模式”按钮 
                         <button id="draw">
                             <img class="svg-icon" src="src/img/draw.svg"> Draw Mode
                         </button>
-                        <!-- 调节粗细 -->
+                        ->
+
+                        <!- 调节粗细 ->
                         <div class="wrap-range">
                             Line width:
                             <input type="range" id="range" min="1" max="50" value="1">
                             <input type="text" id="value" value="1">
                         </div>
-                        <!-- 调节颜色 -->
+                        <!- 调节颜色 ->
                         <div class="wrap-draw-color">
                             <label for="draw-color">
                                 Brush color:
@@ -160,36 +190,62 @@
                             </label>
                         </div>
                     </div>
+                    -->
 
                 </section>
 
                 <!-- 右栏 -->
                 <section class="right-column">
                     <!-- 画布区域 -->
-                    <div class="wrap-canvas">
-                        <canvas id="c" width="500" height="400"></canvas>
+                    <div class="wrap-canvas" id="canvas-container">
+                        <!-- <canvas id="c" width="500" height="400"></canvas> -->
                     </div>
-                    <!-- 两个按钮区域 -->
-                    <div class="wrap-area wrap-delete">
-                        <span
+                    <!-- 按钮区域 -->
+                    <div class="wrap-area wrap-canvas-buttons">
+                        <!-- 撤销按钮 -->
+                        <button id="undo">
+                            <img class="svg-icon" src="src/img/undo.svg">
+                        </button>
+                        <!-- 恢复按钮 -->
+                        <button id="redo">
+                            <img class="svg-icon" src="src/img/redo.svg">
+                        </button>
+
+                        <!-- 清空按钮 -->
+                        <button id="clear">
+                            <img class="svg-icon" src="src/img/clear.svg">
+                        </button>
+
+                        <!-- 保存按钮 -->
+                        <button id="save">
+                            <img class="svg-icon" src="src/img/save.svg">
+                        </button>
+
+                        <!-- “保存”按钮区域 
+                        <div class="wrap-area wrap-save">
+                            <a id="save" href="javascript:void(0)">
+                                <img class="svg-icon" src="src/img/save.svg"> Save
+                            </a>
+                        </div>
+                        -->
+
+                        <!-- <span
                             data-wenk="To select an object, you have to activate Selection Mode and select the object you want to delete."
                             data-wenk-pos="bottom" data-wenk-length="medium">
-                            <!-- “删除选中”按钮 -->
+                            “删除选中”按钮
                             <button id="delete">
                                 <img class="svg-icon" src="src/img/delete.svg"> Delete Selected Object
                             </button>
-                        </span>
-                        <!-- “清空”按钮 -->
+                        </span> -->
+
+                        <!-- “清空”按钮 
                         <button id="delete-all">
                             <img class="svg-icon" src="src/img/delete.svg"> Delete All Objects
                         </button>
+                        -->
                     </div>
-                    <!-- “保存”按钮区域 -->
-                    <div class="wrap-area wrap-save">
-                        <a id="save" href="javascript:void(0)">
-                            <img class="svg-icon" src="src/img/save.svg"> Save
-                        </a>
-                    </div>
+
+                    
                 </section>
 
             </section>
