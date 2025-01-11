@@ -218,6 +218,14 @@ $(function () {
         return false;
     });
 
+    // save 按钮
+    // $("#save").click(function () {
+    //     console.log("save");
+
+    //     const persistent = `${cordova.file.externalRootDirectory}`;
+
+    // });
+
     // save canvas as image 按钮
     $("#save").click(function () {
         $("#save").attr("href", canvas.toDataURL());
