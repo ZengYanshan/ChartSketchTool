@@ -18,11 +18,58 @@ html {
     html {
         font-size: calc(100vw / 80); /* 横屏时的字体大小 */
     }
+
+    .draweditor-area {
+        width: 100vw;
+        height: 96vh;
+        gap: 2rem;
+    }
+    .left-column {
+        flex-basis: 40vw;
+    }
+    .right-column {
+        flex-basis: 50vw;
+
+        display: flex;
+        gap: 0.25rem;
+    }
+    .wrap-canvas {
+        flex: none;
+    }
+    .wrap-canvas-buttons {
+        flex: none;
+
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 @media screen and (orientation: portrait) {
     html {
-        font-size: calc(100vw / 24); /* 竖屏时的字体大小 */
+        font-size: calc(100vw / 20); /* 竖屏时的字体大小 */
+    }
+
+    .draweditor-area {
+        width: 96vw;
+        height: 100vh;
+        gap: 1rem;
+        flex-direction: column;
+    }
+    .left-column {
+        flex-basis: 16rem;
+    }
+    .right-column {
+        flex-basis: 18rem;
+
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    .wrap-canvas {
+        flex: none;
+    }
+    .wrap-canvas-buttons {
+        flex: none;
     }
 }
 
@@ -40,9 +87,13 @@ html {
 }
 
 body {
+    width: 100vw;
+    height: 100vh;
+    
     font-family: 'Source Sans Pro', sans-serif;
     color: #717f86;
 
+    /* 禁用原始手势处理 */
     touch-action: none;
 }
 
@@ -88,18 +139,19 @@ header p {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    align-items: center;
+    /* gap: 1rem; */
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
+    /* margin-left: auto;
+    margin-right: auto; */
+    margin: auto;
 }
 
 .left-column {
-    width: 40%;
+    /* width: 40%; */
     text-align: center;
-    margin-right: 50px;
 }
 
 .right-column {
@@ -176,6 +228,16 @@ select:focus {
 .ezdz-dropzone p {
     position: relative;
     top: 25px;
+}
+
+.wrap-index {
+    display: flex;
+    button {
+        flex: none;
+    }
+    .index-title {
+        flex: auto;
+    }
 }
 
 .wrap-canvas-background-color,

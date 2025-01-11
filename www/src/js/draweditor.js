@@ -1,14 +1,22 @@
 function insertCanvasHtml() {
-    // 根据横竖比例调整canvas大小
-    if (window.innerWidth < 768) {
-        var canvasWidth = window.innerWidth * 0.8;
+    var canvasContainer = document.getElementById('canvas-container');
+
+    // 根据父元素调整canvas大小
+    // var canvasWidth = canvasContainer.width;
+    // var canvasHeight = canvasContainer.height;
+
+    // 根据窗口大小调整canvas大小
+    if (window.innerWidth < window.innerHeight) {
+        // 移动端
+        var canvasWidth = window.innerWidth * 0.9;
         var canvasHeight = window.innerHeight * 0.4;
     } else {
-        var canvasWidth = window.innerWidth * 0.4;
-        var canvasHeight = window.innerHeight * 0.8;
+        var canvasWidth = window.innerWidth * 0.5;
+        var canvasHeight = window.innerHeight * 0.9;
     }
+
     const canvasHtml = `<canvas id="c" width="${canvasWidth}" height="${canvasHeight}"></canvas>`;
-    document.getElementById('canvas-container').innerHTML = canvasHtml;
+    canvasContainer.innerHTML = canvasHtml;
 }
 
 // 禁止移动端浏览器处理滑动手势
@@ -165,7 +173,7 @@ $(function () {
         return false;
     });
 
-    // update brush width
+    // update brush width 更改画笔粗细
     $("#range").on("change", function () {
         var rangeVal = $(this).val();
         $("#value").val(rangeVal);
