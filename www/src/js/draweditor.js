@@ -19,16 +19,16 @@ function insertCanvasHtml() {
     canvasContainer.innerHTML = canvasHtml;
 }
 
-function dataURLtoBlob(dataURL){
+function dataURLtoBlob(dataURL) {
     var arr = dataURL.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
         bstr = atob(arr[1]),
         n = bstr.length,
         u8arr = new Uint8Array(n);
-   while (n--) {
-       u8arr[n] = bstr.charCodeAt(n);
-   }
-   return new Blob([u8arr], { type: mime })
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime })
 }
 
 // 保存图片
@@ -37,7 +37,7 @@ function saveImage(dataURL) {
     if (confirm('Are you sure to save canvas?')) {
         var fileName = "canvas.png";
         var dataObj = dataURLtoBlob(dataURL);
-        createAndWriteFile(path("download", fileName), dataObj);
+        createAndWriteFile(path("files-external", fileName), dataObj);
     }
 }
 
@@ -60,12 +60,57 @@ $(function () {
         $(".page_wrapper").show();
     });
 
-    insertCanvasHtml();
-
     // create a canvas 创建画布
+    insertCanvasHtml();
     var canvas = new fabric.Canvas('c', {
-        isDrawingMode: false
+        isDrawingMode: true
     });
+    var canvasState = [];
+    var currentStateIndex = -1;
+    var isUpdateOperation = true; // 防止撤销和恢复被存入画布状态栈
+    function updateCanvasState() {
+        if (isUpdateOperation) {
+            const canvasAsJson = JSON.stringify(canvas.toJSON());
+            canvasState.splice(currentStateIndex + 1);
+            canvasState.push(canvasAsJson);
+            currentStateIndex = canvasState.length - 1;
+            console.log(canvasState, currentStateIndex, "update");
+        } else {
+            // isUpdateOperation = true;
+        }
+    }
+    function loadCanvasState(stateIndex) {
+        isUpdateOperation = false;
+        canvas.loadFromJSON(canvasState[stateIndex], () => {
+            canvas.renderAll();
+            currentStateIndex = stateIndex;
+            isUpdateOperation = true;
+        });
+        console.log(canvasState, currentStateIndex, "load");
+    }
+    function undoCanvas() {
+        if (currentStateIndex > 0) {
+            loadCanvasState(currentStateIndex - 1);
+        }
+    }
+    function redoCanvas() {
+        if (currentStateIndex < canvasState.length - 1) {
+            loadCanvasState(currentStateIndex + 1);
+        }
+    }
+    function clearCanvas() {
+        if (confirm('Are you sure to clear canvas?')) {
+            canvas.backgroundImage = false;
+            canvas.clear();
+
+            canvasState = [];
+            currentStateIndex = -1;
+            isUpdateOperation = true;
+        }
+    }
+    canvas.on("object:modified", updateCanvasState);
+    canvas.on("object:added", updateCanvasState);
+
 
     // drag&drop area settings 区域
     $('[name="image"]').ezdz({
@@ -232,18 +277,13 @@ $(function () {
     });
 
     // undo 按钮
-    $("#undo").click(function () {
-        alert("undo");
-    });
+    $("#undo").click(undoCanvas);
+
+    // redo 按钮
+    $("#redo").click(redoCanvas);
 
     // clear 按钮
-    $("#clear").click(function () {
-        if (confirm('Are you sure to clear canvas?')) {
-            canvas.backgroundImage = false;
-            canvas.clear();
-        }
-        return false;
-    });
+    $("#clear").click(clearCanvas);
 
     // save 按钮
     $("#save").click(function () {
