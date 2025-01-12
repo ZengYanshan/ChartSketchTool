@@ -28,27 +28,25 @@ function insertCanvasHtml() {
     canvasContainer.innerHTML = canvasHtml;
 }
 
+function dataURLtoBlob(dataURL){
+    var arr = dataURL.split(','),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+   while (n--) {
+       u8arr[n] = bstr.charCodeAt(n);
+   }
+   return new Blob([u8arr], { type: mime })
+}
+
 // 保存图片
-function saveImage(base64Data) {
+function saveImage(dataURL) {
+    console.log("dataURL", dataURL);
     if (confirm('Are you sure to save canvas?')) {
-        var img = new Image();
-        img.src = base64Data;
-        img.setAttribute('crossOrigin', 'Anonymous');  // 解决跨域
-        window.cordova.base64ToGallery(
-            base64Data,
-            {
-                prefix: 'img_',
-                mediaScanner: true
-            },
-            function (path) {
-                console.log(path);
-                alert('success');
-            },
-            function (err) {
-                console.error(err);
-                alert('fail');
-            }
-        );
+        var fileName = "canvas.png";
+        var dataObj = dataURLtoBlob(dataURL);
+        createAndWriteFile(fileName, dataObj);
     }
 }
 
@@ -258,33 +256,30 @@ $(function () {
 
     // save 按钮
     $("#save").click(function () {
-        alert("saving");
-
         // 申请权限
-        var permissions = cordova.plugins.permissions;
-        var permissionList = [
-            permissions.CAMERA,
-            permissions.WRITE_EXTERNAL_STORAGE
-        ]
-        permissions.checkPermission(permissions.CAMERA, function (s) {
-            if (!s.hasPermission) {
-                permissions.requestPermission(permissions.CAMERA, function (s) {
-                    if (s.hasPermission) {
-                        // 调用保存图片的方法
-                        saveImage(canvas.toDataURL());
-                    } else {
-                        alert('申请失败');
-                    }
-                }, function (error) {
-                    alert(error);
-                });
-            } else {
-                // 调用保存图片的方法
-                saveImage(canvas.toDataURL());
-            }
-        }, function (error) {
-            alert(error);
-        });
+        // let permissions = cordova.plugins.permissions;
+        // let permissionList = [
+        //     permissions.CAMERA,
+        //     permissions.WRITE_EXTERNAL_STORAGE
+        // ];
+        // let acceptedCount = 0;
+        // permissionList.forEach(perm => {
+        //     permissions.checkPermission(perm, function (status) {
+        //         if (status.hasPermission) {
+        //             acceptedCount++;
+        //             console.log('checkAppPermission: checkPermission: Current acceptedCount: ', acceptedCount);
+        //             if (acceptedCount === permissionList.length) {
+        //                 console.log('checkAppPermission: checkPermission: All permissions accepted.');
+        //                 saveImage(canvas.toDataURL());
+        //             }
+        //         } else permissions.requestPermission(perm, function () {
+        //             console.log('checkAppPermission: requestPermission: All permissions accepted.');
+        //             saveImage(canvas.toDataURL());
+        //         }, null);
+        //     }, null);
+        // });
+
+        saveImage(canvas.toDataURL());
 
         // $("#save").attr("href", canvas.toDataURL());
         // console.log(canvas.toDataURL());

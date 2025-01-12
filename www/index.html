@@ -3,7 +3,13 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <!-- <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no"> -->
+    <!-- <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=contain"> -->
+    <!-- <meta name="color-scheme" content="light dark"> -->
 
     <title>Chart Sketch Tool</title>
     <link rel="shortcut icon" href="src/img/favicon.png">
@@ -26,7 +32,9 @@
     -->
 
     <!-- 设置视窗以适配移动端 -->
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    
 
 </head>
 
@@ -117,7 +125,8 @@
                     <div class="wrap-area wrap-description">
                         <div>
                             <div>ID: 123</div>
-                            <div>Description: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis repellendus, sed doloribus eos pariatur omnis!</div>
+                            <div>Description: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Debitis
+                                repellendus, sed doloribus eos pariatur omnis!</div>
                         </div>
                         <div>Please sketch on the chart, and save it after sketching.</div>
                     </div>
@@ -128,7 +137,7 @@
                             accept="image/jpeg , image/jpg , image/png">
                         <br>
                     </div>-->
-                    
+
                     <!-- 背景按钮区域 
                     <div class="wrap-area wrap-image-buttons">
                         <button id="image-background">
@@ -220,7 +229,7 @@
                         <button id="save">
                             <img class="svg-icon" src="src/img/save.svg">
                         </button>
-                        
+
 
                         <!-- “保存”按钮区域 
                         <div class="wrap-area wrap-save">
@@ -229,7 +238,7 @@
                             </a>
                         </div>
                         -->
-                        
+
 
                         <!-- <span
                             data-wenk="To select an object, you have to activate Selection Mode and select the object you want to delete."
@@ -247,7 +256,7 @@
                         -->
                     </div>
 
-                    
+
                 </section>
 
             </section>
@@ -272,12 +281,13 @@
         </div> -->
     </div>
 
-
+    <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="src/js/jquery-3.1.0.min.js"></script>
     <script type="text/javascript" src="src/js/fabric-1.6.3.min.js"></script>
     <script type="text/javascript" src="src/js/jquery.ezdz.min.js"></script>
     <script type="text/javascript" src="src/js/jquery.minicolors-2.1.2.min.js"></script>
     <script type="text/javascript" src="src/js/lity.min.js"></script>
+    <script type="text/javascript" src="src/js/file.js"></script>
     <script type="text/javascript" src="src/js/draweditor.js?v=1"></script>
 </body>
 

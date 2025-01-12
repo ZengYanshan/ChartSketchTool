@@ -20,4 +20,5 @@ cordova plugin add https://github.com/Nexxa/cordova-base64-to-gallery.git
 
 TODO:
 - [ ] 序号撑不满整行
-- [ ] 插件不适用当前版本
+- [x] 插件不适用当前版本
+- [ ] 无法创建文件/申请不到存储权限
