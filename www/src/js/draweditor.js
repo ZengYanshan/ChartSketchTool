@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 function insertCanvasHtml() {
     var canvasContainer = document.getElementById('canvas-container');
 
@@ -46,7 +37,7 @@ function saveImage(dataURL) {
     if (confirm('Are you sure to save canvas?')) {
         var fileName = "canvas.png";
         var dataObj = dataURLtoBlob(dataURL);
-        createAndWriteFile(fileName, dataObj);
+        createAndWriteFile(path("download", fileName), dataObj);
     }
 }
 

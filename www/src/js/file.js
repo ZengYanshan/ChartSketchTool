@@ -1,14 +1,23 @@
+function path(dir, name) {
+    if (dir == "download") {
+        dir = "Download/";
+    } else if (dir == "files-external") {
+        dir = cordova.file.externalDataDirectory.replace(cordova.file.externalRootDirectory, '');
+    }
+    return dir + name;
+}
+
 // 创建并写入文件
-function createAndWriteFile(fileName, dataObj) {
+function createAndWriteFile(filePath, dataObj) {
     // 持久化数据保存
-    // alert("保存位置：" + STORAGE_DIRECTORY);
+    alert("保存位置：" + filePath);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
         alert('打开的文件系统: ' + fs.name);
 
         // var absPath = cordova.file.externalRootDirectory;
-        var fileDir = cordova.file.externalDataDirectory.replace(cordova.file.externalRootDirectory, '');
-        var filePath = fileDir + fileName;
+        // var fileDir = cordova.file.externalDataDirectory.replace(cordova.file.externalRootDirectory, '');
+        // var filePath = fileDir + fileName;
 
         fs.root.getFile(filePath, { create: true, exclusive: false },
             function (fileEntry) {

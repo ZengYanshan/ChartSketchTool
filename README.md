@@ -5,6 +5,7 @@ cordova platform remove android
 cordova platform add android@12.0.1
 cordova build android
 cordova run android
+adb uninstall com.zys.chartsketchtool
 cordova plugin add cordova-plugin-file
 cordova plugin add cordova-plugin-android-permissions
 cordova plugin add cordova.plugins.diagnostic
