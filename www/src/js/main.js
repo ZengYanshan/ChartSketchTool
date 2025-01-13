@@ -55,25 +55,45 @@ $(function () {
 
 
     // -------------------------nvBench-------------------------
-    var currentInsightObj = {
-        "index": 0,
-        "nvBench_key": "key",
-        "description": "description",
-        "vega_lite": null,
-    };
-    var imgUrl = "./src/assets/test.png"; // TEST
+    const maxId = insight_nvBench.length;
+    var currentId = 1;
+    var currentInsightObj;
+    function datasetImgUrl() {
+        // 4.png
+        var imgUrl = `./src/assets/dataset/png/${currentInsightObj.key}.png`;
+        console.log("img url: ", imgUrl);
+        return imgUrl;
+    }
     function canvasFileName() {
-        var fileName = `${currentInsightObj.nvBench_key}_${currentInsightObj.index}.png`;
+        // 4_1_sketched.png
+        var fileName = `${currentInsightObj.insight_id}_${currentInsightObj.key}_sketched.png`;
         return fileName;
     }
-    function updateText() {
-        // document.getElementById("insight-text-id").innerHTML = currentInsightObj.nvBench_key;
-        $("#insight-text-id").text(currentInsightObj.nvBench_key);
+    function updateInsight(id) {
+        // 更新currentId, currentInsightObj
+        currentId = id;
+        currentInsightObj = insight_nvBench[currentId - 1]; // 数组下标从 0 开始
+        // 更新页面文本
+        $("#current-id").text(currentId);
+        $("#insight-text-id").text(currentInsightObj.key);
         $("#insight-text-description").text(currentInsightObj.description);
     }
-    updateText();
-    // var nvBenchDataKeys = Object.keys(nvBench_insight);
-    // console.log("nvBench keys", nvBenchDataKeys);
+    function previousInsight() {
+        if (currentId > 1) {
+            updateInsight(currentId - 1);
+        }
+    }
+    function nextInsight() {
+        if (currentId < maxId) {
+            updateInsight(currentId + 1);
+        }
+    }
+    $("#previous").click(previousInsight);
+    $("#next").click(nextInsight);
+    // 初始化
+    updateInsight(1);
+    $("#max-id").text(maxId);
+
 
 
     // -------------------------Canvas-------------------------
@@ -126,31 +146,17 @@ $(function () {
             canvas.clear();
             clearCanvasState();
 
-            setCanvasBackgroundImage(imgUrl);
-            saveCanvas(canvas.toDataURL());
+            setCanvasBackgroundImage(datasetImgUrl()); // TODO 应为读取图片
             updateCanvasState();
+            saveCanvas(canvas.toDataURL());
+            
         }
     }
-    function saveCanvas(dataURL) {
-        console.log("dataURL", dataURL);
-        if (confirm('Are you sure to save canvas?')) {
-            var fileName = `${currentInsightObj.nvBench_key}_${currentInsightObj.index}.png`;
-            var dataObj = dataURL2Blob(dataURL);
-            createAndWriteFile(path("files-external", fileName), dataObj);
-        }
+    function saveCanvas() {
+        var dataObj = dataURL2Blob(canvas.toDataURL());
+        createAndWriteFile(path("files-external", canvasFileName()), dataObj);
+        alert("saved");
     }
-    // function addImgToCanvas(imgUrl) {
-    //     // 向画布添加图片
-    //     // 会触发object:added
-    //     fabric.Image.fromURL(imgUrl, function (oImg) {
-    //         // 若图片比画布大，缩小图片至正好能放入画布
-    //         if (oImg.width > canvas.width || oImg.height > canvas.height) {
-    //             var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
-    //             oImg.scale(scale);
-    //         }
-    //         canvas.add(oImg);
-    //     });
-    // }
     function setCanvasBackgroundImage(img) {
         // 设置画布背景图片
         // 不触发object:added
@@ -172,6 +178,21 @@ $(function () {
             });
         }, { crossOrigin: 'anonymous' });
     }
+    function loadCanvasImage() {
+        try {
+            readCanvasImage(
+                path("files-external", canvasFileName()),
+                setCanvasBackgroundImage,
+                function (error) {
+                    alert(error);
+                    throw new Error(error);
+                }
+            )
+        } catch (e) {
+            console.log(e);
+            setCanvasBackgroundImage(datasetImgUrl());
+        }
+    }
     function setCanvasBrushColor(color) {
         canvas.freeDrawingBrush.color = color;
     }
@@ -180,19 +201,33 @@ $(function () {
     }
     canvas.on("object:modified", updateCanvasState);
     canvas.on("object:added", updateCanvasState);
+    // undo 按钮
+    $("#undo").click(undoCanvas);
+    // redo 按钮
+    $("#redo").click(redoCanvas);
+    // clear 按钮
+    $("#clear").click(clearCanvas);
+    // save 按钮
+    $("#save").click(function () {
+        saveCanvas();
+
+        // $("#save").attr("href", canvas.toDataURL());
+        // console.log(canvas.toDataURL());
+        // $("#save").attr("download", "canvas");
+    });
     // 初始化
-    readCanvasImage(
-        path("files-external", canvasFileName()),
-        setCanvasBackgroundImage,
-        function (error) {
-            // TEST
-            alert(error);
-            setCanvasBackgroundImage(imgUrl);
-        }
-    )
-    updateCanvasState();
     setCanvasBrushColor("#ea484d");
     setCanvasBrushWidth(10);
+    updateCanvasState();
+    loadCanvasImage();
+    // readCanvasImage(
+    //     path("files-external", canvasFileName()),
+    //     setCanvasBackgroundImage,
+    //     function (error) {
+    //         alert(error);
+    //         setCanvasBackgroundImage(datasetImgUrl());
+    //     }
+    // )
 
     // defaut draw color
     $('.draw-color').minicolors({
@@ -242,48 +277,6 @@ $(function () {
         }
         return false;
     });
-
-    // delete selected object 按钮
-    // function deleteObjects() {
-    //     var activeObject = canvas.getActiveObject(),
-    //         activeGroup = canvas.getActiveGroup();
-    //     if (activeObject) {
-    //         if (confirm('Are you sure?')) {
-    //             canvas.remove(activeObject);
-    //         }
-    //     }
-    // };
-    // $("#delete").click(function () {
-    //     deleteObjects();
-    //     return false;
-    // });
-
-    // undo 按钮
-    $("#undo").click(undoCanvas);
-
-    // redo 按钮
-    $("#redo").click(redoCanvas);
-
-    // clear 按钮
-    $("#clear").click(function () {
-        clearCanvas();
-    });
-
-    // save 按钮
-    $("#save").click(function () {
-        saveCanvas(canvas.toDataURL());
-
-        // $("#save").attr("href", canvas.toDataURL());
-        // console.log(canvas.toDataURL());
-        // $("#save").attr("download", "canvas");
-    });
-
-
-
-
-
-
-
 });
 
 // 关闭网页前确认
