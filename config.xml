@@ -9,11 +9,10 @@
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />
 
-    <!-- <platform name="android">
-        <config-file parent="/*" target="AndroidManifest.xml">
-            <uses-permission android:name="android.permission.CAMERA" />
-        </config-file>
-    </platform> -->
+    <!-- 跨域 -->
+    <access origin="*" />
+    <allow-navigation href="*"/>
+
     <platform name="android">
         <!-- 图标 -->
         <!-- <icon src="res/icon/android/mipmap-ldpi/ic_launcher.png" density="ldpi" /> -->
@@ -23,6 +22,7 @@
         <icon src="res/icon/android/mipmap-xxhdpi/ic_launcher.png" density="xxhdpi" />
         <icon src="res/icon/android/mipmap-xxxhdpi/ic_launcher.png" density="xxxhdpi" />
 
+        <!-- 权限声明 -->
         <config-file parent="/*" target="AndroidManifest.xml" xmlns:android="http://schemas.android.com/apk/res/android">
             <uses-permission android:name="android.permission.CAMERA" />
             <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

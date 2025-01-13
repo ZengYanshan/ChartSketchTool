@@ -35,6 +35,29 @@ function createAndWriteFile(filePath, dataObj) {
     }, onErrorLoadFs);
 }
 
+// 读取保存的Canvas图片
+function readCanvasImage(filePath, successCallback, errorCallback) {
+    // 数据读取
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+
+        fs.root.getFile(filePath, { create: false }, function (fileEntry) {
+            // 读取文件
+            // fileEntry.file(function (file) {
+            //     var reader = new FileReader();
+            //     reader.onloadend = function () {
+            //         alert("读取文件完成：" + this.result);
+            //         successCallback(this.result);
+            //     };
+            //     reader.readAsDataURL(file);
+            // }, errorCallback());
+
+            successCallback(fileEntry.toURL());
+
+        }, errorCallback("文件不存在"));
+
+    }, errorCallback("文件系统加载失败"));
+}
+
 // 写文件
 function writeFile(fileEntry, dataObj) {
     // 创建一个写入对象
@@ -59,7 +82,7 @@ function writeFile(fileEntry, dataObj) {
     });
 }
 
-// 读文件
+// 读文件 DataUrl
 function readFile(fileEntry) {
 
     fileEntry.file(function (file) {
@@ -67,17 +90,11 @@ function readFile(fileEntry) {
 
         reader.onloadend = function () {
             alert("读取文件完成：" + this.result);
-            displayFileData(fileEntry.fullPath + ": " + this.result);
         };
 
-        reader.readAsText(file);
+        reader.readAsDataURL(file);
 
     }, onErrorReadFile);
-}
-
-// 显示文件数据
-function displayFileData(data) {
-    // alert(data);
 }
 
 // 文件创建失败回调

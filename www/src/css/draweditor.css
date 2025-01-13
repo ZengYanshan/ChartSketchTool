@@ -112,30 +112,6 @@ body {
     display: none;
 }
 
-/* header,
-footer {
-    text-align: center;
-}
-
-header a {
-    color: #EA9085;
-}
-
-a {
-    text-decoration: none;
-    color: #777;
-}
-
-header h1 {
-    font-size: 50px;
-    margin-top: 0px;
-    margin-bottom: 0px;
-}
-
-header p {
-    font-size: 15px;
-    margin-bottom: 75px;
-} */
 
 .draweditor-area {
     display: -webkit-box;
@@ -152,20 +128,25 @@ header p {
 }
 
 .left-column {
-    /* width: 40%; */
+    width: 100%;
     text-align: center;
+}
+
+.wrap-insight-text {
+    text-align: left;
+    font-size: 20px;
 }
 
 .right-column {
     text-align: center;
 }
 
-.ezdz-dropzone {
+/* .ezdz-dropzone {
     width: auto !important;
-}
+} */
 
 #c {
-    outline: 5px dashed #555;
+    outline: 5px dashed #b1b1b1;
 }
 
 button,
