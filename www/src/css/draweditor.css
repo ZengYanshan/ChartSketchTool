@@ -89,6 +89,8 @@ html {
 body {
     width: 100vw;
     height: 100vh;
+
+    background-color: #eee;
     
     font-family: 'Source Sans Pro', sans-serif;
     color: #717f86;

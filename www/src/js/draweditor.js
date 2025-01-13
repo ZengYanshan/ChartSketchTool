@@ -88,6 +88,11 @@ $(function () {
         });
         console.log(canvasState, currentStateIndex, "load");
     }
+    function clearCanvasState() {
+        canvasState = [];
+        currentStateIndex = -1;
+        isUpdateOperation = true;
+    }
     function undoCanvas() {
         if (currentStateIndex > 0) {
             loadCanvasState(currentStateIndex - 1);
@@ -102,112 +107,45 @@ $(function () {
         if (confirm('Are you sure to clear canvas?')) {
             canvas.backgroundImage = false;
             canvas.clear();
-
-            canvasState = [];
-            currentStateIndex = -1;
-            isUpdateOperation = true;
+            clearCanvasState();
         }
+    }
+    function addImgToCanvas(imgUrl) {
+        // 向画布添加图片
+        // 会触发object:added
+        fabric.Image.fromURL(imgUrl, function (oImg) {
+            // 若图片比画布大，缩小图片至正好能放入画布
+            if (oImg.width > canvas.width || oImg.height > canvas.height) {
+                var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
+                oImg.scale(scale);
+            }
+            canvas.add(oImg);
+        });
+    }
+    function setCanvasBackgroundImage(imgUrl) {
+        // 设置画布背景图片
+        // 不触发object:added
+        fabric.Image.fromURL(imgUrl, function (oImg) {
+            // 若图片比画布大，缩小图片至正好能放入画布
+            if (oImg.width > canvas.width || oImg.height > canvas.height) {
+                var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
+                oImg.scale(scale);
+            }
+            // 居中放置背景图片
+            canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas), {
+                originX: 'center',
+                originY: 'center',
+                left: canvas.width / 2,
+                top: canvas.height / 2,
+            });
+        });
     }
     canvas.on("object:modified", updateCanvasState);
     canvas.on("object:added", updateCanvasState);
 
-
-    // drag&drop area settings 区域
-    $('[name="image"]').ezdz({
-        text: '<p>Drop or select a picture<p>',
-        validators: {
-            maxSize: 4000000
-        },
-        reject: function (file, errors) {
-            if (errors.mimeType) {
-                alert(file.name + ' must be jpg or png.');
-            }
-            if (errors.maxSize) {
-                alert(file.name + ' must be size:4mb max.');
-            }
-        }
-    });
-
-    // canvas background color 背景色区域
-    $('.canvas-background-color').minicolors({
-        defaultValue: '#fff',
-    });
-    var canvasbcolor = $(".canvas-background-color").val();
-    canvas.backgroundColor = canvasbcolor;
-    canvas.renderAll();
-    // 按钮
-    $(".canvas-background-color").on("change", function () {
-        var canvasbcolor = $(".canvas-background-color").val();
-        canvas.backgroundColor = canvasbcolor;
-        canvas.renderAll();
-    });
-
-    // make an image canvas background 按钮
-    $("#image-background").click(function () {
-        var x = $('.ezdz-dropzone img').attr('src');
-        canvas.setBackgroundImage(x,
-            canvas.renderAll.bind(canvas), {
-            width: 500,
-            height: 400,
-            backgroundImageStretch: false
-        });
-
-        $("#c").css("border", "none");
-        return false;
-    });
-
-    // add an image to canvas 按钮
-    $("#image-on").click(function () {
-        var x2 = $('.ezdz-dropzone img').attr('src');
-
-        fabric.Image.fromURL(x2, function (oImg) {
-            canvas.add(oImg);
-
-        }, {
-            "scaleX": 0.40,
-            "scaleY": 0.40
-        });
-
-        $("#c").css("border", "none");
-        return false;
-    });
-
-    // default text color
-    $('.text-color').minicolors({
-        defaultValue: '#333',
-    });
-
-
-    $("header p").click(function () {
-        text.set({
-            fill: '#000'
-        })
-    })
-    // hit enter and add text
-    $('#text').bind('change keyup input', function (e) {
-        var key = e.which;
-        if (key == 13) {
-
-            var myText = $("#text").val();
-            $("#text").val('');
-
-            var mycolor = $(".text-color").val();
-            var myfont = $("#text-font option:selected").val();
-
-            var text = new fabric.Text(myText, {
-                fontFamily: myfont,
-                fontSize: 40,
-                fill: mycolor,
-                left: 40,
-                top: 50
-            });
-            text.hasRotatingPoint = true;
-            canvas.add(text);
-
-            $("#selection").trigger("click");
-        }
-        return false;
-    });
+    // TEST
+    var imgUrl = "./src/assets/test.png";
+    setCanvasBackgroundImage(imgUrl);
 
     // defaut draw color
     $('.draw-color').minicolors({
