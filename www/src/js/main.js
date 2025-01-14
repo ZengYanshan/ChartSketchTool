@@ -31,6 +31,13 @@ function dataURL2Blob(dataURL) {
     return new Blob([u8arr], { type: mime })
 }
 
+function toast(msg) {
+    window.plugins.toast.showShortTop(
+        msg,
+        function (a) { console.log('toast success: ' + a) },
+        function (b) { alert('toast error: ' + b) });
+}
+
 // 禁止移动端浏览器处理滑动手势
 $(document).on("vmousemove", "body", function (e) {
     e.stopPropagation();
@@ -69,29 +76,6 @@ $(function () {
         var fileName = `${currentInsightObj.insight_id}_${currentInsightObj.key}_sketched.png`;
         return fileName;
     }
-    function updateInsight(id) {
-        // 更新currentId, currentInsightObj
-        currentId = id;
-        currentInsightObj = insight_nvBench[currentId - 1]; // 数组下标从 0 开始
-        // 更新页面文本
-        $("#current-id").text(currentId);
-        $("#insight-text-id").text(currentInsightObj.key);
-        $("#insight-text-description").text(currentInsightObj.description);
-    }
-    function previousInsight() {
-        if (currentId > 1) {
-            updateInsight(currentId - 1);
-        }
-    }
-    function nextInsight() {
-        if (currentId < maxId) {
-            updateInsight(currentId + 1);
-        }
-    }
-    $("#previous").click(previousInsight);
-    $("#next").click(nextInsight);
-    // 初始化
-    updateInsight(1);
     $("#max-id").text(maxId);
 
 
@@ -146,16 +130,16 @@ $(function () {
             canvas.clear();
             clearCanvasState();
 
-            setCanvasBackgroundImage(datasetImgUrl()); // TODO 应为读取图片
+            setCanvasBackgroundImage(datasetImgUrl());
             updateCanvasState();
-            saveCanvas(canvas.toDataURL());
-            
+            saveCanvas();
+
         }
     }
     function saveCanvas() {
         var dataObj = dataURL2Blob(canvas.toDataURL());
         createAndWriteFile(path("files-external", canvasFileName()), dataObj);
-        alert("saved");
+        toast("saved");
     }
     function setCanvasBackgroundImage(img) {
         // 设置画布背景图片
@@ -178,20 +162,25 @@ $(function () {
             });
         }, { crossOrigin: 'anonymous' });
     }
-    function loadCanvasImage() {
+    function loadChart() {
+        canvas.backgroundImage = false;
+        canvas.clear();
+        setCanvasBackgroundImage(datasetImgUrl());
         try {
             readCanvasImage(
                 path("files-external", canvasFileName()),
                 setCanvasBackgroundImage,
                 function (error) {
-                    alert(error);
-                    throw new Error(error);
+                    // alert(error);
+                    // throw new Error(error);
                 }
             )
         } catch (e) {
             console.log(e);
             setCanvasBackgroundImage(datasetImgUrl());
+            updateCanvasState();
         }
+        updateCanvasState();
     }
     function setCanvasBrushColor(color) {
         canvas.freeDrawingBrush.color = color;
@@ -215,23 +204,86 @@ $(function () {
         // console.log(canvas.toDataURL());
         // $("#save").attr("download", "canvas");
     });
+    // 导出按钮
+    $("#export").click(function () {
+        readCanvasImage(
+            path("files-external", canvasFileName()),
+            setCanvasBackgroundImage,
+            function (error) {
+                toast(error);
+            }
+        );
+    });
     // 初始化
-    setCanvasBrushColor("#ea484d");
+    // setCanvasBrushColor("#ea484d");
     setCanvasBrushWidth(10);
-    updateCanvasState();
-    loadCanvasImage();
-    // readCanvasImage(
-    //     path("files-external", canvasFileName()),
-    //     setCanvasBackgroundImage,
-    //     function (error) {
-    //         alert(error);
-    //         setCanvasBackgroundImage(datasetImgUrl());
-    //     }
-    // )
+    // loadChart();
+
+    // -------------------------Insight-------------------------
+
+    function updateInsight(id) {
+        // 保存上一图
+        // saveCanvas();
+        // 更新currentId, currentInsightObj
+        currentId = id;
+        currentInsightObj = insight_nvBench[currentId - 1]; // 数组下标从 0 开始
+        // 更新页面文本
+        $("#current-id").text(currentId);
+        $("#insight-text-id").text(currentInsightObj.key);
+        $("#insight-text-description").text(currentInsightObj.description);
+        // 更新下一图
+        loadChart();
+    }
+    function previousInsight() {
+        if (currentId > 1) {
+            updateInsight(currentId - 1);
+        }
+    }
+    function nextInsight() {
+        if (currentId < maxId) {
+            updateInsight(currentId + 1);
+        }
+    }
+    $("#previous").click(previousInsight);
+    $("#next").click(nextInsight);
+    // 初始化
+    updateInsight(1);
+
+    // -------------------------Color Picker-------------------------
+    var colorPicker = new iro.ColorPicker('#picker', {
+        color: "#ea484d",
+        // padding: 0,
+        margin: 5,
+        // borderWidth: 5,
+        layout: [
+            {
+                component: iro.ui.Box,
+                options: {}
+            },
+            {
+                component: iro.ui.Slider,
+                options: {
+                    // can also be 'saturation', 'value', 'red', 'green', 'blue', 'alpha' or 'kelvin'
+                    sliderType: 'hue'
+                }
+            },
+        ]
+    });
+    colorPicker.on(['color:init', 'color:change'], function (color) {
+        // 将当前颜色记录为十六进制字符串
+        var hex = color.hexString;
+        setCanvasBrushColor(hex);
+        $("#pick-color").css("background-color", hex);
+    });
+    // 点击按钮显示/隐藏颜色选择器
+    $("#pick-color").click(function () {
+        $("#picker").toggle();
+    });
+
 
     // defaut draw color
     $('.draw-color').minicolors({
-        defaultValue: '#333',
+        defaultValue: "#ea484d"
     });
 
     // click button and start to draw
@@ -271,7 +323,7 @@ $(function () {
             $("#range").val(rangeShownVal);
             canvas.freeDrawingBrush.width = rangeShownVal;
         } else {
-            alert("Max is 50");
+            toast("Max is 50");
             var rangeVal2 = $("#range").val();
             $("#value").val(rangeVal2);
         }

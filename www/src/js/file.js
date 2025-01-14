@@ -10,10 +10,10 @@ function path(dir, name) {
 // 创建并写入文件
 function createAndWriteFile(filePath, dataObj) {
     // 持久化数据保存
-    alert("保存位置：" + filePath);
+    // alert("保存位置：" + filePath);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
-        alert('打开的文件系统: ' + fs.name);
+        // alert('打开的文件系统: ' + fs.name);
 
         // var absPath = cordova.file.externalRootDirectory;
         // var fileDir = cordova.file.externalDataDirectory.replace(cordova.file.externalRootDirectory, '');
@@ -22,7 +22,7 @@ function createAndWriteFile(filePath, dataObj) {
         fs.root.getFile(filePath, { create: true, exclusive: false },
             function (fileEntry) {
 
-                alert("是否是文件？" + fileEntry.isFile.toString());
+                // alert("是否是文件？" + fileEntry.isFile.toString());
                 // fileEntry.name == 'hello.txt'
                 // fileEntry.fullPath == '/hello.txt'
                 //文件内容
@@ -37,8 +37,12 @@ function createAndWriteFile(filePath, dataObj) {
 
 // 读取保存的Canvas图片
 function readCanvasImage(filePath, successCallback, errorCallback) {
+    // alert("位置：" + filePath);
+
     // 数据读取
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+
+        // alert('打开的文件系统: ' + fs.name);
 
         fs.root.getFile(filePath, { create: false }, function (fileEntry) {
             // 读取文件
@@ -53,7 +57,7 @@ function readCanvasImage(filePath, successCallback, errorCallback) {
 
             successCallback(fileEntry.toURL());
 
-        }, errorCallback("文件不存在"));
+        }, errorCallback("file not found"));
 
     }, errorCallback("文件系统加载失败"));
 }
@@ -64,7 +68,7 @@ function writeFile(fileEntry, dataObj) {
     fileEntry.createWriter(function (fileWriter) {
 
         fileWriter.onwrite = function () {
-            alert("Successful file write...");
+            // alert("写入文件完成：" + fileEntry.fullPath);
             // readFile(fileEntry);
         };
 
@@ -73,12 +77,11 @@ function writeFile(fileEntry, dataObj) {
         };
 
         // TEST 若无数据，编造一些数据
-        if (!dataObj) {
-            dataObj = new Blob(['some file data'], { type: 'text/plain' });
-        }
+        // if (!dataObj) {
+        //     dataObj = new Blob(['some file data'], { type: 'text/plain' });
+        // }
 
         fileWriter.write(dataObj);
-        alert("写入文件完成：" + fileEntry.fullPath);
     });
 }
 

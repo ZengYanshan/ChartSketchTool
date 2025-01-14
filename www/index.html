@@ -100,6 +100,14 @@
                     </div>
                     <!-- 按钮区域 -->
                     <div class="wrap-area wrap-canvas-buttons">
+                        <!-- 颜色调节按钮 -->
+                        <button id="pick-color">
+                            <img class="svg-icon" src="src/img/transparent.svg">
+                        </button>
+                        <!-- 画笔粗细调节按钮 -->
+                        <button id="pick-width">
+                            <img class="svg-icon" src="src/img/transparent.svg">
+                        </button>
                         <!-- 撤销按钮 -->
                         <button id="undo">
                             <img class="svg-icon" src="src/img/undo.svg">
@@ -118,6 +126,11 @@
                         <button id="save">
                             <img class="svg-icon" src="src/img/save.svg">
                         </button>
+
+                        <!-- 导出按钮 -->
+                        <!-- <button id="export">
+                            <img class="svg-icon" src="src/img/storage.svg">
+                        </button> -->
 
 
                         <!-- “保存”按钮区域 
@@ -150,6 +163,9 @@
 
             </section>
 
+            <!-- 颜色选择器窗口 -->
+            <div id="picker"></div>
+
             <!-- 底部 
             <footer>
                 <p class="copyright">©
@@ -172,9 +188,11 @@
 
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="src/js/jquery-3.1.0.min.js"></script>
+    <!-- <script type="text/javascript" src="src/js/jquery-3.7.1.min.js"></script> -->
     <script type="text/javascript" src="src/js/fabric-1.6.3.min.js"></script>
     <!-- <script type="text/javascript" src="src/js/jquery.ezdz.min.js"></script> -->
-    <script type="text/javascript" src="src/js/jquery.minicolors-2.1.2.min.js"></script>
+    <!-- <script type="text/javascript" src="src/js/jquery.minicolors-2.1.2.min.js"></script> -->
+    <script type="text/javascript" src="src/js/iro@5.js"></script>
     <script type="text/javascript" src="src/js/lity.min.js"></script>
     <script type="text/javascript" src="src/js/insight_nvBench.js"></script>
     <script type="text/javascript" src="src/js/file.js"></script>
