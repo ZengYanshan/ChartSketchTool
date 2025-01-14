@@ -19,25 +19,6 @@ function insertCanvasHtml() {
     canvasContainer.innerHTML = canvasHtml;
 }
 
-function dataURL2Blob(dataURL) {
-    var arr = dataURL.split(','),
-        mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]),
-        n = bstr.length,
-        u8arr = new Uint8Array(n);
-    while (n--) {
-        u8arr[n] = bstr.charCodeAt(n);
-    }
-    return new Blob([u8arr], { type: mime })
-}
-
-function toast(msg) {
-    window.plugins.toast.showShortTop(
-        msg,
-        function (a) { console.log('toast success: ' + a) },
-        function (b) { alert('toast error: ' + b) });
-}
-
 // 禁止移动端浏览器处理滑动手势
 $(document).on("vmousemove", "body", function (e) {
     e.stopPropagation();
@@ -138,9 +119,7 @@ $(function () {
         }
     }
     function saveCanvas() {
-        var dataObj = dataURL2Blob(canvas.toDataURL());
-        createAndWriteFile(path("files-external", canvasFileName()), dataObj);
-        toast("saved");
+        writeSketchedImage(canvasFileName(), canvas.toDataURL());
     }
     function setCanvasBackgroundImage(img) {
         // 设置画布背景图片
@@ -163,10 +142,10 @@ $(function () {
             });
         }, { crossOrigin: 'anonymous' });
     }
-    function loadChart() {
+    function loadCanvasImage() {
         canvas.backgroundImage = false;
         canvas.clear();
-        setCanvasBackgroundImage(datasetImgUrl());
+        setCanvasBackgroundImage(datasetImgUrl()); // 先设置图，防止读取失败没有图
         try {
             readCanvasImage(
                 path("files-external", canvasFileName()),
@@ -206,34 +185,35 @@ $(function () {
         // $("#save").attr("download", "canvas");
     });
     // 导出按钮
-    $("#export").click(function () {
-        readCanvasImage(
-            path("files-external", canvasFileName()),
-            setCanvasBackgroundImage,
-            function (error) {
-                toast(error);
-            }
-        );
-    });
+    // $("#export").click(function () {
+    //     readCanvasImage(
+    //         path("files-external", canvasFileName()),
+    //         setCanvasBackgroundImage,
+    //         function (error) {
+    //             toast(error);
+    //         }
+    //     );
+    // });
     // 初始化
-    // setCanvasBrushColor("#ea484d");
-    // setCanvasBrushWidth(10);
-    // loadChart();
+    // loadCanvasImage();
 
     // -------------------------Insight-------------------------
 
     function updateInsight(id) {
         // 保存上一图
         // saveCanvas();
+
         // 更新currentId, currentInsightObj
         currentId = id;
         currentInsightObj = insight_nvBench[currentId - 1]; // 数组下标从 0 开始
+
         // 更新页面文本
         $("#current-id").text(currentId);
         $("#insight-text-id").text(currentInsightObj.key);
         $("#insight-text-description").text(currentInsightObj.description);
-        // 更新下一图
-        loadChart();
+
+        // 读入下一图
+        loadCanvasImage();
     }
     function previousInsight() {
         if (currentId > 1) {
@@ -252,7 +232,7 @@ $(function () {
 
     // -------------------------Color Picker-------------------------
     var colorPicker = new iro.ColorPicker('#color-picker', {
-        color: "#ea484d50",
+        color: "#ea484d50", // 前六位为颜色，后二位转为粗细
         // padding: 0,
         margin: 5,
         // borderWidth: 5,
@@ -282,8 +262,9 @@ $(function () {
         var brushColor = color.hexString;
         setCanvasBrushColor(brushColor);
         $("#brush").attr("fill", brushColor);
+        // $("#pick-brush").css("border-color", brushColor); // 改变#pick-brush border 颜色
         // 改变全局粗细
-        var brushWidth = color.alpha * maxBrushWidth;
+        var brushWidth = (0.1 + color.alpha * 0.9) * maxBrushWidth;
         setCanvasBrushWidth(brushWidth);
         $("#brush").attr("r", brushWidth / 2);
     });
@@ -294,25 +275,25 @@ $(function () {
 
 
     // update brush width 更改画笔粗细
-    $("#range").on("change", function () {
-        var rangeVal = $(this).val();
-        $("#value").val(rangeVal);
-        canvas.freeDrawingBrush.width = rangeVal;
-        return false;
-    });
+    // $("#range").on("change", function () {
+    //     var rangeVal = $(this).val();
+    //     $("#value").val(rangeVal);
+    //     canvas.freeDrawingBrush.width = rangeVal;
+    //     return false;
+    // });
 
-    $("#value").on("keyup", function () {
-        var rangeShownVal = $(this).val();
-        if (rangeShownVal < 51) {
-            $("#range").val(rangeShownVal);
-            canvas.freeDrawingBrush.width = rangeShownVal;
-        } else {
-            toast("Max is 50");
-            var rangeVal2 = $("#range").val();
-            $("#value").val(rangeVal2);
-        }
-        return false;
-    });
+    // $("#value").on("keyup", function () {
+    //     var rangeShownVal = $(this).val();
+    //     if (rangeShownVal < 51) {
+    //         $("#range").val(rangeShownVal);
+    //         canvas.freeDrawingBrush.width = rangeShownVal;
+    //     } else {
+    //         toast("Max is 50");
+    //         var rangeVal2 = $("#range").val();
+    //         $("#value").val(rangeVal2);
+    //     }
+    //     return false;
+    // });
 });
 
 // 关闭网页前确认

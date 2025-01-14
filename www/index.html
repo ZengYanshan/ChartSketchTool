@@ -12,7 +12,7 @@
     <!-- <meta name="color-scheme" content="light dark"> -->
 
     <title>Chart Sketch Tool</title>
-    <link rel="shortcut icon" href="src/img/favicon.png">
+    <link rel="shortcut icon" href="src/assets/img/favicon.png">
     <link rel="stylesheet" type="text/css" href="src/css/draweditor.css?v=1">
 
     <!-- 网页分享信息 
@@ -38,7 +38,7 @@
 
 <body>
     <!-- “加载中”动图 -->
-    <img src="src/img/loader.svg" class="loader">
+    <img src="src/assets/img/loader.svg" class="loader">
 
     <div class="page_wrapper">
 
@@ -52,13 +52,13 @@
                     <!-- 序号与前后按钮 -->
                     <div class="wrap-area wrap-index">
                         <button id="previous">
-                            <img class="svg-icon" src="src/img/previous.svg">
+                            <img class="svg-icon" src="src/assets/img/previous.svg">
                         </button>
 
                         <div class="id-title"><span id="current-id"></span> / <span id="max-id"></span></div>
 
                         <button id="next">
-                            <img class="svg-icon" src="src/img/next.svg">
+                            <img class="svg-icon" src="src/assets/img/next.svg">
                         </button>
                     </div>
 
@@ -108,52 +108,28 @@
                         </button>
                         <!-- 撤销按钮 -->
                         <button id="undo">
-                            <img class="svg-icon" src="src/img/undo.svg">
+                            <img class="svg-icon" src="src/assets/img/undo.svg">
                         </button>
                         <!-- 恢复按钮 -->
                         <button id="redo">
-                            <img class="svg-icon" src="src/img/redo.svg">
+                            <img class="svg-icon" src="src/assets/img/redo.svg">
                         </button>
 
                         <!-- 清空按钮 -->
                         <button id="clear">
-                            <img class="svg-icon" src="src/img/clear.svg">
+                            <img class="svg-icon" src="src/assets/img/clear.svg">
                         </button>
 
                         <!-- 保存按钮 -->
                         <button id="save">
-                            <img class="svg-icon" src="src/img/save.svg">
+                            <img class="svg-icon" src="src/assets/img/save.svg">
                         </button>
 
                         <!-- 导出按钮 -->
                         <!-- <button id="export">
-                            <img class="svg-icon" src="src/img/storage.svg">
+                            <img class="svg-icon" src="src/assets/img/storage.svg">
                         </button> -->
 
-
-                        <!-- “保存”按钮区域 
-                        <div class="wrap-area wrap-save">
-                            <a id="save" href="javascript:void(0)">
-                                <img class="svg-icon" src="src/img/save.svg">
-                            </a>
-                        </div>
-                        -->
-
-
-                        <!-- <span
-                            data-wenk="To select an object, you have to activate Selection Mode and select the object you want to delete."
-                            data-wenk-pos="bottom" data-wenk-length="medium">
-                            “删除选中”按钮
-                            <button id="delete">
-                                <img class="svg-icon" src="src/img/delete.svg"> Delete Selected Object
-                            </button>
-                        </span> -->
-
-                        <!-- “清空”按钮 
-                        <button id="delete-all">
-                            <img class="svg-icon" src="src/img/delete.svg"> Delete All Objects
-                        </button>
-                        -->
                     </div>
 
 
@@ -195,11 +171,10 @@
     <script type="text/javascript" src="src/js/jquery-3.1.0.min.js"></script>
     <!-- <script type="text/javascript" src="src/js/jquery-3.7.1.min.js"></script> -->
     <script type="text/javascript" src="src/js/fabric-1.6.3.min.js"></script>
-    <!-- <script type="text/javascript" src="src/js/jquery.ezdz.min.js"></script> -->
-    <!-- <script type="text/javascript" src="src/js/jquery.minicolors-2.1.2.min.js"></script> -->
     <script type="text/javascript" src="src/js/iro@5.js"></script>
     <script type="text/javascript" src="src/js/lity.min.js"></script>
     <script type="text/javascript" src="src/js/insight_nvBench.js"></script>
+    <script type="text/javascript" src="src/js/dialogs.js"></script>
     <script type="text/javascript" src="src/js/file.js"></script>
     <script type="text/javascript" src="src/js/main.js"></script>
 </body>
