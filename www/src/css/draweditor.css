@@ -14,6 +14,14 @@ html {
     /* font-size: calc(100vw / 80); */
 }
 
+
+/* 移动端 */
+@media screen and (max-width: 768px) {
+    td {
+        word-break: break-all;  /* 长单词中断换行 */
+    }
+}
+
 @media screen and (orientation: landscape) {
     html {
         font-size: calc(100vw / 80);
@@ -34,6 +42,8 @@ html {
     .left-column {
         flex-basis: 40vw;
     }
+
+
 
     .right-column {
         flex-basis: 50vw;
@@ -101,8 +111,6 @@ html {
     box-sizing: inherit;
     padding: 0;
     margin: 0;
-    /* letter-spacing: 1.05px; */
-    /* line-height: 1.5; */
     outline: none;
 }
 
@@ -149,16 +157,39 @@ body {
 
 .left-column {
     width: 100%;
+    height: 100%;
     text-align: center;
 }
 
 .wrap-index {
     font-size: 32px;
+    font-weight: bold;
+    #current-id {
+        color: #ff7a7a;
+    }
+
+    #previous, .id-title, #next {
+        display: inline-block;
+        text-align: center; /* 可选：使内容居中 */
+        box-sizing: border-box; /* 确保 padding 和 border 不会影响宽度 */
+    }
 }
 
+
 .wrap-insight-text {
+    margin: 1rem 0.5em;
+    table {
+        margin: 1rem 0;
+    }
+
     text-align: justify;
     font-size: 20px;
+}
+
+.prompt {
+    text-align: justify;
+    font-size: 18px;
+    color: #a1adb3;
 }
 
 .right-column {
@@ -170,7 +201,7 @@ body {
 } */
 
 #c {
-    outline: 5px dashed #b1b1b1;
+    outline: 5px dashed #a1adb3;
 }
 
 button {
@@ -187,7 +218,20 @@ button {
     transition: all .3s;
 }
 
+th {
+    text-align: left;
+    vertical-align: top;
+}
+
+td {
+    text-align: justify;
+    vertical-align: top;
+}
+
 .wrap-canvas-buttons {
+    display: flex;
+    gap: 2px;
+
     #pick-brush {
         background-color: #ffffff00;
         /* width: 40px;
@@ -201,86 +245,6 @@ button {
     }
 }
 
-
-
-/* wrap-area gaps */
-
-
-.wrap-index {
-    display: flex;
-
-    button {
-        flex: none;
-    }
-
-    .id-title {
-        flex: auto;
-    }
-}
-
-.wrap-canvas-background-color,
-.wrap-text {
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-}
-
-.wrap-delete {
-    margin-top: 10px;
-    padding-top: 10px;
-}
-
-.wrap-save {
-    margin-top: 20px;
-}
-
-
-/*end wrap-area gaps */
-
-.wrap-text {
-    text-align: left;
-}
-
-.wrap-text #text {
-    width: 100%;
-    height: 40px;
-    padding: 3px 6px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    border: 1px solid lightgrey;
-}
-
-.wrap-text select {
-    float: right;
-    width: 50%;
-    height: 40px;
-    padding: 3px 6px;
-    border-radius: 5px;
-    border: 1px solid lightgrey;
-}
-
-.wrap-range {
-    margin-top: 10px;
-    text-align: left;
-}
-
-.wrap-range input[type="range"] {
-    width: 70%;
-    position: relative;
-    top: 6px;
-}
-
-.wrap-range input[type="text"] {
-    float: right;
-    width: 40px;
-    padding: 3px 6px;
-    border-radius: 5px;
-    border: 1px solid lightgrey;
-}
-
-.wrap-draw-color {
-    float: left;
-    margin-top: 10px;
-}
 
 .picker {
     /* 初始隐藏 */

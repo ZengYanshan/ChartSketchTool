@@ -10,6 +10,13 @@ cordova plugin add cordova-plugin-file
 cordova plugin add cordova-plugin-x-toast
 cordova plugin add cordova-plugin-android-permissions
 cordova plugin add cordova.plugins.diagnostic
+# 打包发布，默认会生成 aab 而不是 apk
+cordova build android --release -- --packageType=apk
+# 打开 ChartSketchTool\platforms\android\app\build\outputs\apk\release\app-release-unsigned.apk
+# 生成 keystore (Java)
+keytool -genkeypair -alias zys.keystore -keyalg RSA -validity 4000 -keystore zys.keystore
+# 签名 (Java)
+jarsigner -verbose -keystore zys.keystore -signedjar app-signed.apk app-release-unsigned.apk zys.keystore
 ```
 
 ### Develop Environment
@@ -23,4 +30,6 @@ TODO:
 - [ ] 序号撑不满整行
 - [x] 插件不适用当前版本
 - [x] 无法创建文件/申请不到存储权限
-- [ ] 前后切换时：文件系统加载失败/加载了错误的图表和正确的笔迹/加载完全错误
+- [x] 前后切换时：文件系统加载失败/加载了错误的图表和正确的笔迹/加载完全错误
+- [ ] debug + signed, release, release + signed 无法安装
+- [ ] 加载65.png失败
