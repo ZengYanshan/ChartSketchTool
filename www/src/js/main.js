@@ -82,6 +82,7 @@ $(function () {
 
     // -------------------------Canvas-------------------------
     // create a canvas 创建画布
+    const maxBrushWidth = 36;
     insertCanvasHtml();
     var canvas = new fabric.Canvas('c', {
         isDrawingMode: true
@@ -216,7 +217,7 @@ $(function () {
     });
     // 初始化
     // setCanvasBrushColor("#ea484d");
-    setCanvasBrushWidth(10);
+    // setCanvasBrushWidth(10);
     // loadChart();
 
     // -------------------------Insight-------------------------
@@ -250,8 +251,8 @@ $(function () {
     updateInsight(1);
 
     // -------------------------Color Picker-------------------------
-    var colorPicker = new iro.ColorPicker('#picker', {
-        color: "#ea484d",
+    var colorPicker = new iro.ColorPicker('#color-picker', {
+        color: "#ea484d50",
         // padding: 0,
         margin: 5,
         // borderWidth: 5,
@@ -267,47 +268,30 @@ $(function () {
                     sliderType: 'hue'
                 }
             },
+            {
+                component: iro.ui.Slider,
+                options: {
+                    sliderType: 'alpha'
+                }
+            },
         ]
     });
     colorPicker.on(['color:init', 'color:change'], function (color) {
-        // 将当前颜色记录为十六进制字符串
-        var hex = color.hexString;
-        setCanvasBrushColor(hex);
-        $("#pick-color").css("background-color", hex);
+        // 颜色选择器事件
+        // 改变全局颜色
+        var brushColor = color.hexString;
+        setCanvasBrushColor(brushColor);
+        $("#brush").attr("fill", brushColor);
+        // 改变全局粗细
+        var brushWidth = color.alpha * maxBrushWidth;
+        setCanvasBrushWidth(brushWidth);
+        $("#brush").attr("r", brushWidth / 2);
     });
-    // 点击按钮显示/隐藏颜色选择器
-    $("#pick-color").click(function () {
-        $("#picker").toggle();
-    });
-
-
-    // defaut draw color
-    $('.draw-color').minicolors({
-        defaultValue: "#ea484d"
-    });
-
-    // click button and start to draw
-    $("#draw").click(function () {
-        $(".draw-color").on("change", function () {
-            var mycolor = $(".draw-color").val();
-            canvas.freeDrawingBrush.color = mycolor;
-            return false;
-        });
-
-        canvas.renderAll();
-        $(this).addClass('active');
-        $("#selection").removeClass('active');
-        return false;
+    // 点击按钮显示/隐藏选择器
+    $("#pick-brush").click(function () {
+        $("#color-picker").toggle();
     });
 
-    // click button to activate selection mode
-    $("#draw").addClass('active');
-    $("#selection").click(function () {
-        canvas.isDrawingMode = false;
-        $(this).addClass('active');
-        $("#draw").removeClass('active');
-        return false;
-    });
 
     // update brush width 更改画笔粗细
     $("#range").on("change", function () {

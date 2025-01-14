@@ -100,13 +100,11 @@
                     </div>
                     <!-- 按钮区域 -->
                     <div class="wrap-area wrap-canvas-buttons">
-                        <!-- 颜色调节按钮 -->
-                        <button id="pick-color">
-                            <img class="svg-icon" src="src/img/transparent.svg">
-                        </button>
                         <!-- 画笔粗细调节按钮 -->
-                        <button id="pick-width">
-                            <img class="svg-icon" src="src/img/transparent.svg">
+                        <button id="pick-brush">
+                            <svg width="40" height="40">
+                                <circle id="brush" cx="20" cy="20" r="4" fill="#000" />
+                            </svg>
                         </button>
                         <!-- 撤销按钮 -->
                         <button id="undo">
@@ -164,7 +162,14 @@
             </section>
 
             <!-- 颜色选择器窗口 -->
-            <div id="picker"></div>
+            <div class="picker" id="color-picker"></div>
+
+            <!-- 粗细选择器窗口 -->
+            <div class="picker" id="picker">
+                Line width:
+                <input type="range" id="range" min="1" max="50" value="1">
+                <input type="text" id="value" value="1">
+            </div>
 
             <!-- 底部 
             <footer>
