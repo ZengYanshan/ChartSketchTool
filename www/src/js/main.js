@@ -27,6 +27,7 @@ $(document).on("vmousemove", "body", function (e) {
 });
 
 // 窗口大小改变时自动刷新
+// DEBUG 移动端打开输入法会改变页面大小触发重载
 // window.addEventListener("resize", (event) => {
 //     location.reload();
 // });
@@ -41,6 +42,7 @@ const maxId = insight_nvBench.length;
 var currentId = 1;
 var currentInsightObj;
 const maxBrushWidth = 36;
+var defaultBrush = "#ea484d05"; // 前六位为颜色，后二位转为粗细
 
 
 $(function () {
@@ -240,7 +242,7 @@ $(function () {
 
     // -------------------------Color Picker-------------------------
     var colorPicker = new iro.ColorPicker('#color-picker', {
-        color: "#ea484d50", // 前六位为颜色，后二位转为粗细
+        color: defaultBrush,
         // padding: 0,
         margin: 5,
         // borderWidth: 5,
@@ -272,7 +274,8 @@ $(function () {
         $("#brush").attr("fill", brushColor);
         // $("#pick-brush").css("border-color", brushColor); // 改变#pick-brush border 颜色
         // 改变全局粗细
-        var brushWidth = (0.1 + color.alpha * 0.9) * maxBrushWidth;
+        const base = 0.03;
+        var brushWidth = (base + color.alpha * (1.00 - base)) * maxBrushWidth;
         setCanvasBrushWidth(brushWidth);
         $("#brush").attr("r", brushWidth / 2);
     });
