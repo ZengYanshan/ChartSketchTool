@@ -58,13 +58,13 @@ $(function () {
     // -------------------------nvBench-------------------------
 
     function datasetImgUrl() {
-        // 4.png
-        var imgUrl = `./src/assets/dataset/png/${currentInsightObj.key}.png`;
+        // 4.svg
+        var imgUrl = `./src/assets/dataset/svg/${currentInsightObj.key}.svg`;
         // console.log("img url: ", imgUrl);
         return imgUrl;
     }
     function canvasFileName() {
-        // 4_1_sketched.png
+        // 4_1_sketched.svg
         var fileName = `${currentId}_${currentInsightObj.key}_sketched.png`;
         return fileName;
     }
@@ -122,20 +122,17 @@ $(function () {
             canvas.clear();
             clearCanvasState();
 
-            setCanvasBackgroundImage(datasetImgUrl());
+            setCanvasBackgroundImage(datasetImgUrl(), "svg");
             updateCanvasState();
-            saveCanvas();
+            // saveCanvas();
 
         }
     }
     function saveCanvas() {
         writeSketchedImage(canvasFileName(), canvas.toDataURL());
+        // writeSketchedImage(canvasFileName(), canvas.toSVG());
     }
-    function setCanvasBackgroundImage(img) {
-        // 设置画布背景图片
-        // 不触发object:added
-        // img：img.src | dataURL
-
+    function setCanvasBackgroundPng(img) {
         fabric.Image.fromURL(img, function (oImg) {
             // 若图片比画布大，缩小图片至正好能放入画布
             if (oImg.width > canvas.width || oImg.height > canvas.height) {
@@ -152,10 +149,72 @@ $(function () {
             });
         }, { crossOrigin: 'anonymous' });
     }
+    function setCanvasBackgroundSvgFromUrl(url) {
+        // 设置画布背景图片
+        // 不触发object:added
+        // url：svg url
+
+        fabric.loadSVGFromURL(url, function (objects, options) {
+            // 打包成一个对象
+            var obj = fabric.util.groupSVGElements(objects, options);
+
+            // 调整图片大小至正好能放入画布
+            var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
+            obj.scale(scale);
+
+            // 放置背景图片
+            canvas.backgroundImage = false;
+            canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
+                // 居中
+                // originX: 'center',
+                // originY: 'center',
+                // left: canvas.width / 2,
+                // top: canvas.height / 2,
+                // backgroundImageStretch: false
+            });
+        });
+    }
+    function setCanvasBackgroundSvgFromString(svgString) {
+        fabric.loadSVGFromString(svgString, function (objects, options) {
+            // 打包成一个对象
+            var obj = fabric.util.groupSVGElements(objects, options);
+
+            // 调整图片大小至正好能放入画布
+            // var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
+            // obj.scale(scale);
+
+            // 放置背景图片
+            canvas.backgroundImage = false;
+            canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
+                // 居中
+                // originX: 'center',
+                // originY: 'center',
+                // left: canvas.width / 2,
+                // top: canvas.height / 2,
+                // backgroundImageStretch: false
+            });
+        });
+    }
+    function setCanvasBackgroundImage(img, type) {
+        // 设置画布背景图片
+        // 不触发object:added
+        // img：img.src(png/svg) | dataURL
+
+        // 根据结尾是否为".svg"，判断img为url还是svgstring
+        if (type == "svg") {
+            if (img.endsWith(".svg")) {
+                setCanvasBackgroundSvgFromUrl(img);
+            } else {
+                setCanvasBackgroundSvgFromString(img);
+            }
+        } else if (type == "png") {
+            setCanvasBackgroundPng(img);
+        }
+    }
     function loadCanvasImage() {
         canvas.backgroundImage = false;
         canvas.clear();
-        setCanvasBackgroundImage(datasetImgUrl()); // 先设置图，防止读取失败没有图
+        setCanvasBackgroundImage(datasetImgUrl(), "svg"); // 先设置图，防止读取失败没有图
         try {
             readCanvasImage(
                 path("files-external", canvasFileName()),
@@ -167,7 +226,7 @@ $(function () {
             )
         } catch (e) {
             console.log(e);
-            setCanvasBackgroundImage(datasetImgUrl());
+            setCanvasBackgroundImage(datasetImgUrl(), "svg");
             updateCanvasState();
         }
         updateCanvasState();
@@ -231,7 +290,7 @@ $(function () {
         currentId = parseInt(currentId);
         if (currentId > 1) {
             // 保存当前图
-            saveCanvas();
+            // saveCanvas();
             // 更新上一图
             updateInsight(currentId - 1);
         }
@@ -241,7 +300,7 @@ $(function () {
         currentId = parseInt(currentId);
         if (currentId < maxId) {
             // 保存当前图
-            saveCanvas();
+            // saveCanvas();
             // 更新下一图
             updateInsight(currentId + 1);
         }

@@ -7,6 +7,48 @@ function path(dir, name) {
     return dir + name;
 }
 
+function convertTspansToText(svg) {
+    // 使用正则表达式匹配所有 <tspan> 元素
+    var tspans = svg.match(/<\s*tspan[^>]*>(.*?)<\s*\/\s*tspan>/g);
+
+    if (tspans === null) {
+        return svg;
+    }
+
+    tspans.forEach(function (tspanString) {
+        // 提取 <tspan> 的文本内容
+        var textContent = tspanString.replace(/<\s*tspan[^>]*>/g, '').replace(/<\s*\/tspan[^>]*>/g, '');
+
+        // 查找 <tspan> 的父 <text> 元素
+        var textTagMatch = svg.match(new RegExp(`<text[^>]*>${tspanString}`));
+
+        if (textTagMatch) {
+            var textTagString = textTagMatch[0];
+
+            // 去除 <tspan> 元素
+            var newTextTagString = textTagString.replace(tspanString, textContent);
+
+            // 提取 <tspan> 的 x 和 y 坐标
+            var coordMatch = tspanString.match(/x="(-?\d*\.?\d+)" y="(-?\d*\.?\d+)"/);
+            if (coordMatch && coordMatch.length > 2) {
+                var x = parseFloat(coordMatch[1]);
+                var y = parseFloat(coordMatch[2]);
+
+                // 添加 x 和 y 属性到 <text> 元素
+                newTextTagString = newTextTagString.replace('<text', `<text x="${x}" y="${y}"`);
+        }
+            // 替换原始 <text> 元素
+            svg = svg.replace(textTagString, newTextTagString);
+        }
+
+    });
+
+    // 移除所有剩余的 <tspan> 元素
+    svg = svg.replace(/<\s*tspan[^>]*>(.*?)<\s*\/\s*tspan>/g, '');
+
+    return svg;
+}
+
 function dataURL2Blob(dataURL) {
     var arr = dataURL.split(','),
         mime = arr[0].match(/:(.*?);/)[1],
@@ -19,9 +61,17 @@ function dataURL2Blob(dataURL) {
     return new Blob([u8arr], { type: mime })
 }
 
-// 保存sketched.png
-function writeSketchedImage(fileName, dataUrl) {
-    var dataObj = dataURL2Blob(dataUrl);
+function svg2Blob(svg) {
+    var blob = new Blob([svg], { type: 'image/svg+xml' });
+    return blob;
+}
+
+// 保存sketched.svg
+function writeSketchedImage(fileName, data) {
+    var dataObj = dataURL2Blob(data);
+    // var newSvg = convertTspansToText(data);
+    // alert("newSvg: " + newSvg);
+    // var dataObj = svg2Blob(newSvg);
 
     var privatePath = path("files-external", fileName);
 
@@ -104,12 +154,8 @@ function createAndWriteFile(filePath, dataObj) {
 
 // 读取保存的Canvas图片
 function readCanvasImage(filePath, successCallback, errorCallback) {
-    // toast("位置：" + filePath);
-
     // 数据读取
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-
-        // toast('打开的文件系统: ' + fs.name);
 
         fs.root.getFile(filePath, { create: false }, function (fileEntry) {
             // 读取文件
@@ -119,10 +165,15 @@ function readCanvasImage(filePath, successCallback, errorCallback) {
             //         toast("读取文件完成：" + this.result);
             //         successCallback(this.result);
             //     };
-            //     reader.readAsDataURL(file);
+            //     if (file.type == 'image/svg+xml') {
+            //         reader.readAsText(file);
+            //     } else if (file.type == 'image/png') {
+            //         reader.readAsDataURL(file);
+            //     }
+                
             // }, errorCallback());
-
-            successCallback(fileEntry.toURL());
+            // alert("读取结果：", fileEntry.toURL());
+            successCallback(fileEntry.toURL(), "png");
 
         }, errorCallback("file not found"));
 
