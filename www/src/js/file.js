@@ -36,7 +36,7 @@ function convertTspansToText(svg) {
 
                 // 添加 x 和 y 属性到 <text> 元素
                 newTextTagString = newTextTagString.replace('<text', `<text x="${x}" y="${y}"`);
-        }
+            }
             // 替换原始 <text> 元素
             svg = svg.replace(textTagString, newTextTagString);
         }
@@ -68,10 +68,10 @@ function svg2Blob(svg) {
 
 // 保存sketched.svg
 function writeSketchedImage(fileName, data) {
-    var dataObj = dataURL2Blob(data);
+    // var dataObj = dataURL2Blob(data);
     // var newSvg = convertTspansToText(data);
     // alert("newSvg: " + newSvg);
-    // var dataObj = svg2Blob(newSvg);
+    var dataObj = svg2Blob(data);
 
     var privatePath = path("files-external", fileName);
 
@@ -83,7 +83,7 @@ function writeSketchedImage(fileName, data) {
         // 保存到沙箱
         fs.root.getFile(privatePath, { create: true, exclusive: false },
             function (fileEntry) {
-                writeFile(fileEntry, dataObj, 
+                writeFile(fileEntry, dataObj,
                     function () {
                         // toast("文件写入成功");
                     },
@@ -96,7 +96,7 @@ function writeSketchedImage(fileName, data) {
         fs.root.getDirectory(publicDir, { create: true }, function (dirEntry) {
             dirEntry.getFile(fileName, { create: true, exclusive: false },
                 function (fileEntry) {
-                    writeFile(fileEntry, dataObj, 
+                    writeFile(fileEntry, dataObj,
                         function () {
                             toast("save to " + publicPath);
                         },
@@ -105,7 +105,7 @@ function writeSketchedImage(fileName, data) {
                 }, onErrorCreateFile
             );
         }, onErrorGetDir);
-        
+
     }, onErrorLoadFs);
 }
 
@@ -139,7 +139,7 @@ function createAndWriteFile(filePath, dataObj) {
                 //文件内容
                 // var dataObj = new Blob(['Hello, World!'], { type: 'text/plain' });
                 //写入文件
-                writeFile(fileEntry, dataObj, 
+                writeFile(fileEntry, dataObj,
                     function () {
                         // toast("文件写入成功");
                     },
@@ -159,21 +159,18 @@ function readCanvasImage(filePath, successCallback, errorCallback) {
 
         fs.root.getFile(filePath, { create: false }, function (fileEntry) {
             // 读取文件
-            // fileEntry.file(function (file) {
-            //     var reader = new FileReader();
-            //     reader.onloadend = function () {
-            //         toast("读取文件完成：" + this.result);
-            //         successCallback(this.result);
-            //     };
-            //     if (file.type == 'image/svg+xml') {
-            //         reader.readAsText(file);
-            //     } else if (file.type == 'image/png') {
-            //         reader.readAsDataURL(file);
-            //     }
-                
-            // }, errorCallback());
+            fileEntry.file(function (file) {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    toast("读取文件完成：" + this.result);
+                    successCallback(this.result, "svg");
+                };
+                // file.type == 'image/svg+xml')
+                reader.readAsText(file);
+            }, errorCallback());
+
             // alert("读取结果：", fileEntry.toURL());
-            successCallback(fileEntry.toURL(), "png");
+            // successCallback(fileEntry.toURL(), "png");
 
         }, errorCallback("file not found"));
 

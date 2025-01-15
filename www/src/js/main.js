@@ -65,7 +65,7 @@ $(function () {
     }
     function canvasFileName() {
         // 4_1_sketched.svg
-        var fileName = `${currentId}_${currentInsightObj.key}_sketched.png`;
+        var fileName = `${currentId}_${currentInsightObj.key}_sketched.svg`;
         return fileName;
     }
     $("#max-id").text(maxId);
@@ -129,8 +129,8 @@ $(function () {
         }
     }
     function saveCanvas() {
-        writeSketchedImage(canvasFileName(), canvas.toDataURL());
-        // writeSketchedImage(canvasFileName(), canvas.toSVG());
+        // writeSketchedImage(canvasFileName(), canvas.toDataURL());
+        writeSketchedImage(canvasFileName(), canvas.toSVG());
     }
     function setCanvasBackgroundPng(img) {
         fabric.Image.fromURL(img, function (oImg) {
@@ -166,11 +166,11 @@ $(function () {
             canvas.backgroundImage = false;
             canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
                 // 居中
-                // originX: 'center',
-                // originY: 'center',
-                // left: canvas.width / 2,
-                // top: canvas.height / 2,
-                // backgroundImageStretch: false
+                originX: 'center',
+                originY: 'center',
+                left: canvas.width / 2,
+                top: canvas.height / 2,
+                backgroundImageStretch: false
             });
         });
     }
@@ -187,11 +187,11 @@ $(function () {
             canvas.backgroundImage = false;
             canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
                 // 居中
-                // originX: 'center',
-                // originY: 'center',
-                // left: canvas.width / 2,
-                // top: canvas.height / 2,
-                // backgroundImageStretch: false
+                originX: 'center',
+                originY: 'center',
+                left: canvas.width / 2,
+                top: canvas.height / 2,
+                backgroundImageStretch: false
             });
         });
     }
