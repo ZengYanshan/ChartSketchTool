@@ -163,25 +163,25 @@ function readFile(fileEntry) {
 
 // 文件夹创建失败回调
 function onErrorGetDir(error) {
-    toast("文件夹创建失败", error.toString());
+    toast("failed to get/create directory", error.toString());
 }
 
 // 文件创建失败回调
 function onErrorCreateFile(error) {
-    toast("文件创建失败", error.toString());
+    toast("failed to create file", error.toString());
 }
 
 // FileSystem加载失败回调
 function onErrorLoadFs(error) {
-    toast("文件系统加载失败", error.toString());
+    toast("failed to load file system", error.toString());
 }
 
 // 文件读取失败回调
 function onErrorReadFile(error) {
-    toast("文件读取失败", error.toString());
+    toast("failed to read file", error.toString());
 }
 
 // 文件写入失败回调
 function onErrorWriteFile(error) {
-    toast("文件写入失败", error.toString());
+    toast("failed to write file", error.toString());
 }
