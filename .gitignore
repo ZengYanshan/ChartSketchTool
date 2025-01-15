@@ -25,5 +25,4 @@ node_modules/
 /plugins/
 /platforms/
 
-/www/src/assets/dataset/
-esg.jks
+# /www/src/assets/dataset/
