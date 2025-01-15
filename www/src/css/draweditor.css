@@ -15,18 +15,38 @@ html {
 }
 
 
-/* 移动端 */
+/* 移动端竖屏 */
 @media screen and (max-width: 768px) {
     td {
         word-break: break-all;
         /* 长单词中断换行 */
     }
+
+    .wrap-insight-text {
+        font-size: 18px;
+    }
+    
+    .prompt {
+        font-size: 14px;
+    }
 }
 
+/* 移动端竖屏以外 */
+@media screen and (min-width: 769px) {
+    .wrap-insight-text {
+        font-size: 22px;
+    }
+    
+    .prompt {
+        font-size: 18px;
+    }
+}
+
+/* 横屏 */
 @media screen and (orientation: landscape) {
     html {
         font-size: calc(100vw / 80);
-        /* 横屏时的字体大小 */
+        
     }
 
     #color-picker {
@@ -65,10 +85,10 @@ html {
     }
 }
 
+/* 竖屏 */
 @media screen and (orientation: portrait) {
     html {
         font-size: calc(100vw / 20);
-        /* 竖屏时的字体大小 */
     }
 
     #color-picker {
@@ -184,9 +204,11 @@ body {
 
 #current-id {
     background-color: transparent;
-    border: 0;
-    color: #ff7a7a;
+    border-width: 0 0 2px;
+    border-color: #ff7a7a;
+
     text-align: center;
+    color: #ff7a7a;
 }
 #max-id {
     /* text-align: left; */
@@ -205,7 +227,7 @@ body {
 
 
     text-align: justify;
-    font-size: 20px;
+    /* font-size: 20px; */
 }
 
 table {
@@ -214,7 +236,7 @@ table {
 
 .prompt {
     text-align: justify;
-    font-size: 18px;
+    /* font-size: 18px; */
     color: #a1adb3;
 }
 
