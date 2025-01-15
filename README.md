@@ -8,8 +8,7 @@ cordova build android
 cordova run android
 cordova plugin add cordova-plugin-file
 cordova plugin add cordova-plugin-x-toast
-cordova plugin add cordova-plugin-android-permissions
-cordova plugin add cordova.plugins.diagnostic
+cordova plugin add cordova-plugin-splashscreen
 # 打包发布，默认会生成 aab 而不是 apk
 cordova build android --release -- --packageType=apk
 # 打开 ChartSketchTool\platforms\android\app\build\outputs\apk\release\app-release-unsigned.apk
@@ -33,3 +32,4 @@ TODO:
 - [x] 前后切换时：文件系统加载失败/加载了错误的图表和正确的笔迹/加载完全错误
 - [ ] debug + signed, release, release + signed 无法安装
 - [ ] 加载65.png失败
+- [ ] 移动端打开输入法会改变页面大小触发重载

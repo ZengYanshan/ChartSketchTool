@@ -18,7 +18,8 @@ html {
 /* 移动端 */
 @media screen and (max-width: 768px) {
     td {
-        word-break: break-all;  /* 长单词中断换行 */
+        word-break: break-all;
+        /* 长单词中断换行 */
     }
 }
 
@@ -140,6 +141,9 @@ body {
     display: none;
 }
 
+.container-fluid {
+    
+}
 
 .draweditor-area {
     display: -webkit-box;
@@ -164,26 +168,48 @@ body {
 .wrap-index {
     font-size: 32px;
     font-weight: bold;
-    #current-id {
-        color: #ff7a7a;
-    }
 
-    #previous, .id-title, #next {
-        display: inline-block;
-        text-align: center; /* 可选：使内容居中 */
-        box-sizing: border-box; /* 确保 padding 和 border 不会影响宽度 */
-    }
+
+    display: flex;
 }
+#previous,
+#next {
+    flex: none;
+    /* display: inline-block; */
+}
+.id-title {
+    flex: auto;
+    /* display: inline-block; */
+}
+
+#current-id {
+    background-color: transparent;
+    border: 0;
+    color: #ff7a7a;
+    text-align: center;
+}
+#max-id {
+    /* text-align: left; */
+}
+#current-id,
+#max-id {
+    display: inline-block;
+    width: 3em;
+}
+
+
 
 
 .wrap-insight-text {
     margin: 1rem 0.5em;
-    table {
-        margin: 1rem 0;
-    }
+
 
     text-align: justify;
     font-size: 20px;
+}
+
+table {
+    margin: 1rem 0;
 }
 
 .prompt {
@@ -231,18 +257,19 @@ td {
 .wrap-canvas-buttons {
     display: flex;
     gap: 2px;
+}
 
-    #pick-brush {
-        background-color: #ffffff00;
-        /* width: 40px;
-        height: 40px; */
-        padding: 0;
-        border: 2px solid #a1c0b2;
-        vertical-align: bottom;
-    }
-    #save {
-        background-color: #ff7a7a;
-    }
+#pick-brush {
+    background-color: #ffffff00;
+    /* width: 40px;
+    height: 40px; */
+    padding: 0;
+    border: 2px solid #a1c0b2;
+    vertical-align: bottom;
+}
+
+#save {
+    background-color: #ff7a7a;
 }
 
 

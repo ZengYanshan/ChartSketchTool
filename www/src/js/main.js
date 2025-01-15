@@ -27,9 +27,20 @@ $(document).on("vmousemove", "body", function (e) {
 });
 
 // 窗口大小改变时自动刷新
-window.addEventListener("resize", (event) => {
+// window.addEventListener("resize", (event) => {
+//     location.reload();
+// });
+
+// 横竖屏反转时自动刷新
+window.addEventListener("orientationchange", (event) => {
     location.reload();
-});
+})
+
+// -------------------------global-------------------------
+const maxId = insight_nvBench.length;
+var currentId = 1;
+var currentInsightObj;
+const maxBrushWidth = 36;
 
 
 $(function () {
@@ -38,14 +49,12 @@ $(function () {
         $(".page_wrapper").show();
     });
 
-    // -------------------------global-------------------------
-    
+
+
 
 
     // -------------------------nvBench-------------------------
-    const maxId = insight_nvBench.length;
-    var currentId = 1;
-    var currentInsightObj;
+
     function datasetImgUrl() {
         // 4.png
         var imgUrl = `./src/assets/dataset/png/${currentInsightObj.key}.png`;
@@ -63,7 +72,6 @@ $(function () {
 
     // -------------------------Canvas-------------------------
     // create a canvas 创建画布
-    const maxBrushWidth = 36;
     insertCanvasHtml();
     var canvas = new fabric.Canvas('c', {
         isDrawingMode: true
@@ -208,7 +216,7 @@ $(function () {
         currentInsightObj = insight_nvBench[currentId - 1]; // 数组下标从 0 开始
 
         // 更新页面文本
-        $("#current-id").text(currentId);
+        $("#current-id").val(currentId);
         $("#insight-text-id").text(currentInsightObj.key);
         $("#insight-text-description").text(currentInsightObj.description);
 
@@ -273,6 +281,16 @@ $(function () {
         $("#color-picker").toggle();
     });
 
+    // 输入编号并回车，跳转到对应编号
+    $('#current-id').bind('change keyup input', function (e) {
+        var key = e.which;
+        if (key == 13) {
+            var inputCurrentId = $("#current-id").val();
+            if (inputCurrentId > 0 && inputCurrentId <= maxId) {
+                updateInsight(inputCurrentId);
+            }
+        }
+    });
 
     // update brush width 更改画笔粗细
     // $("#range").on("change", function () {
