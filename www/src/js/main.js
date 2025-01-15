@@ -60,7 +60,7 @@ $(function () {
     function datasetImgUrl() {
         // 4.png
         var imgUrl = `./src/assets/dataset/png/${currentInsightObj.key}.png`;
-        console.log("img url: ", imgUrl);
+        // console.log("img url: ", imgUrl);
         return imgUrl;
     }
     function canvasFileName() {
@@ -220,17 +220,22 @@ $(function () {
         // 更新页面文本
         $("#current-id").val(currentId);
         $("#insight-text-id").text(currentInsightObj.key);
+        $("#insight-text-type").text(currentInsightObj.type);
         $("#insight-text-description").text(currentInsightObj.description);
 
         // 读入下一图
         loadCanvasImage();
     }
     function previousInsight() {
+        // console.log(typeof currentId, currentId); // string
+        currentId = parseInt(currentId);
         if (currentId > 1) {
             updateInsight(currentId - 1);
         }
     }
     function nextInsight() {
+        // console.log(typeof currentId, currentId); // string
+        currentId = parseInt(currentId);
         if (currentId < maxId) {
             updateInsight(currentId + 1);
         }
