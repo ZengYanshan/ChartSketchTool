@@ -33,9 +33,9 @@ $(document).on("vmousemove", "body", function (e) {
 // });
 
 // 横竖屏反转时自动刷新
-window.addEventListener("orientationchange", (event) => {
-    location.reload();
-})
+// window.addEventListener("orientationchange", (event) => {
+//     location.reload();
+// })
 
 // -------------------------global-------------------------
 const maxId = insight_nvBench.length;
@@ -65,7 +65,7 @@ $(function () {
     }
     function canvasFileName() {
         // 4_1_sketched.png
-        var fileName = `${currentInsightObj.insight_id}_${currentInsightObj.key}_sketched.png`;
+        var fileName = `${currentId}_${currentInsightObj.key}_sketched.png`;
         return fileName;
     }
     $("#max-id").text(maxId);
@@ -230,6 +230,9 @@ $(function () {
         // console.log(typeof currentId, currentId); // string
         currentId = parseInt(currentId);
         if (currentId > 1) {
+            // 保存当前图
+            saveCanvas();
+            // 更新上一图
             updateInsight(currentId - 1);
         }
     }
@@ -237,6 +240,9 @@ $(function () {
         // console.log(typeof currentId, currentId); // string
         currentId = parseInt(currentId);
         if (currentId < maxId) {
+            // 保存当前图
+            saveCanvas();
+            // 更新下一图
             updateInsight(currentId + 1);
         }
     }
