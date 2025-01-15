@@ -25,7 +25,7 @@ html {
     .wrap-insight-text {
         font-size: 18px;
     }
-    
+
     .prompt {
         font-size: 14px;
     }
@@ -36,7 +36,7 @@ html {
     .wrap-insight-text {
         font-size: 22px;
     }
-    
+
     .prompt {
         font-size: 18px;
     }
@@ -46,7 +46,7 @@ html {
 @media screen and (orientation: landscape) {
     html {
         font-size: calc(100vw / 80);
-        
+
     }
 
     #color-picker {
@@ -161,9 +161,7 @@ body {
     display: none;
 }
 
-.container-fluid {
-    
-}
+.container-fluid {}
 
 .draweditor-area {
     display: -webkit-box;
@@ -192,11 +190,13 @@ body {
 
     display: flex;
 }
+
 #previous,
 #next {
     flex: none;
     /* display: inline-block; */
 }
+
 .id-title {
     flex: auto;
     /* display: inline-block; */
@@ -210,9 +210,11 @@ body {
     text-align: center;
     color: #ff7a7a;
 }
+
 #max-id {
     /* text-align: left; */
 }
+
 #current-id,
 #max-id {
     display: inline-block;
@@ -250,6 +252,18 @@ table {
 
 #c {
     outline: 5px dashed #a1adb3;
+}
+
+/* 隐藏上下箭头 */
+input[type=number] {
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
+    -moz-appearance: textfield;
+
 }
 
 button {
