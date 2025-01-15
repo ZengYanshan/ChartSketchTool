@@ -37,3 +37,4 @@ jarsigner -verbose -keystore zys.keystore -signedjar app-signed.apk app-release-
 - [ ] 已存在的文件不可覆写
 - [ ] 保存键无用
 - [ ] 保存的svg读取有问题
+- [ ] 撤销时会把svg背景一并撤销
