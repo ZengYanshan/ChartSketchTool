@@ -8,45 +8,58 @@ function path(dir, name) {
 }
 
 function convertTspansToText(svg) {
-    // 使用正则表达式匹配所有 <tspan> 元素
-    var tspans = svg.match(/<\s*tspan[^>]*>(.*?)<\s*\/\s*tspan>/g);
+    // 创建DOMParser实例
+    const parser = new DOMParser();
 
-    if (tspans === null) {
-        return svg;
-    }
+    // 解析HTML字符串
+    const doc = parser.parseFromString(svg, 'image/svg+xml');
 
-    tspans.forEach(function (tspanString) {
-        // 提取 <tspan> 的文本内容
-        var textContent = tspanString.replace(/<\s*tspan[^>]*>/g, '').replace(/<\s*\/tspan[^>]*>/g, '');
+    // 查找所有的<text>元素
+    const textElements = doc.querySelectorAll('text');
 
-        // 查找 <tspan> 的父 <text> 元素
-        var textTagMatch = svg.match(new RegExp(`<text[^>]*>${tspanString}`));
+    textElements.forEach(textElement => {
+        // 查找<text>元素内的所有<tspan>元素
+        const tspanElements = textElement.querySelectorAll('tspan');
 
-        if (textTagMatch) {
-            var textTagString = textTagMatch[0];
+        tspanElements.forEach(tspanElement => {
+            // 获取<tspan>的文本内容
+            const textContent = tspanElement.textContent;
 
-            // 去除 <tspan> 元素
-            var newTextTagString = textTagString.replace(tspanString, textContent);
-
-            // 提取 <tspan> 的 x 和 y 坐标
-            var coordMatch = tspanString.match(/x="(-?\d*\.?\d+)" y="(-?\d*\.?\d+)"/);
-            if (coordMatch && coordMatch.length > 2) {
-                var x = parseFloat(coordMatch[1]);
-                var y = parseFloat(coordMatch[2]);
-
-                // 添加 x 和 y 属性到 <text> 元素
-                newTextTagString = newTextTagString.replace('<text', `<text x="${x}" y="${y}"`);
+            // 复制<tspan>的x和y属性到<text>
+            if (tspanElement.hasAttribute('x')) {
+                if (textElement.hasAttribute('x')) {
+                    textElement.setAttribute('x', `${parseFloat(textElement.getAttribute('x')) 
+                        + parseFloat(tspanElement.getAttribute('x'))}`
+                    );
+                } else {
+                    textElement.setAttribute('x', tspanElement.getAttribute('x'));
+                }
             }
-            // 替换原始 <text> 元素
-            svg = svg.replace(textTagString, newTextTagString);
-        }
+            if (tspanElement.hasAttribute('y')) {
+                if (textElement.hasAttribute('y')) {
+                    textElement.setAttribute('y', `${parseFloat(textElement.getAttribute('y')) 
+                        + parseFloat(tspanElement.getAttribute('y'))}`
+                    );
+                }
+                else {
+                    textElement.setAttribute('y', tspanElement.getAttribute('y'));
+                }
+            }
 
+            // 将<tspan>的文本内容设置到<text>元素中
+            textElement.textContent = textContent;
+
+            // 移除<tspan>元素
+            tspanElement.remove();
+
+            // 注意：<text>元素内的所有其他子元素（如果有的话）都被删除
+        });
     });
 
-    // 移除所有剩余的 <tspan> 元素
-    svg = svg.replace(/<\s*tspan[^>]*>(.*?)<\s*\/\s*tspan>/g, '');
-
-    return svg;
+    // 序列化修改后的DOM
+    const serializer = new XMLSerializer();
+    const modifiedHtmlString = serializer.serializeToString(doc);
+    return modifiedHtmlString;
 }
 
 function dataURL2Blob(dataURL) {
@@ -69,9 +82,9 @@ function svg2Blob(svg) {
 // 保存sketched.svg
 function writeSketchedImage(fileName, data) {
     // var dataObj = dataURL2Blob(data);
-    // var newSvg = convertTspansToText(data);
+    var newSvg = convertTspansToText(data); // DEBUG：修复fabric.js文本偏移问题
     // alert("newSvg: " + newSvg);
-    var dataObj = svg2Blob(data);
+    var dataObj = svg2Blob(newSvg);
 
     var privatePath = path("files-external", fileName);
 
