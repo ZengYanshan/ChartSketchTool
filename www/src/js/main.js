@@ -133,12 +133,13 @@ $(function () {
         writeSketchedImage(canvasFileName(), canvas.toSVG());
     }
     function setCanvasBackgroundPng(img) {
+        // 根据图片 URL 或 dataURL 设置画布背景图片
+
         fabric.Image.fromURL(img, function (oImg) {
-            // 若图片比画布大，缩小图片至正好能放入画布
-            if (oImg.width > canvas.width || oImg.height > canvas.height) {
+            // 缩小图片至正好能放入画布
                 var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
                 oImg.scale(scale);
-            }
+            
             // 居中放置背景图片
             canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas), {
                 originX: 'center',
@@ -150,7 +151,7 @@ $(function () {
         }, { crossOrigin: 'anonymous' });
     }
     function setCanvasBackgroundSvgFromUrl(url) {
-        // 设置画布背景图片
+        // 根据 svg URL 设置画布背景图片
         // 不触发object:added
         // url：svg url
 
@@ -175,13 +176,15 @@ $(function () {
         });
     }
     function setCanvasBackgroundSvgFromString(svgString) {
+        // 根据 svg 文件内容字符串设置画布背景图片
+
         fabric.loadSVGFromString(svgString, function (objects, options) {
             // 打包成一个对象
             var obj = fabric.util.groupSVGElements(objects, options);
 
             // 调整图片大小至正好能放入画布
-            // var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
-            // obj.scale(scale);
+            var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
+            obj.scale(scale);
 
             // 放置背景图片
             canvas.backgroundImage = false;

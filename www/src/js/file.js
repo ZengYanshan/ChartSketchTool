@@ -7,6 +7,19 @@ function path(dir, name) {
     return dir + name;
 }
 
+function removeDesc(svg) {
+    // 删除 <desc> 标签（<desc>Created with Fabric.js 1.6.3</desc>）
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svg, 'image/svg+xml');
+    const descElement = doc.querySelector('desc');
+    if (descElement) {
+        descElement.remove();
+    }
+    const serializer = new XMLSerializer();
+    const modifiedHtmlString = serializer.serializeToString(doc);
+    return modifiedHtmlString;
+}
+
 function convertTspansToText(svg) {
     // 创建DOMParser实例
     const parser = new DOMParser();
@@ -82,7 +95,7 @@ function svg2Blob(svg) {
 // 保存sketched.svg
 function writeSketchedImage(fileName, data) {
     // var dataObj = dataURL2Blob(data);
-    var newSvg = convertTspansToText(data); // DEBUG：修复fabric.js文本偏移问题
+    var newSvg = convertTspansToText(removeDesc(data)); // DEBUG：修复fabric.js文本偏移问题
     // alert("newSvg: " + newSvg);
     var dataObj = svg2Blob(newSvg);
 
