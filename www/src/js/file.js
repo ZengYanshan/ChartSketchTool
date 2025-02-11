@@ -7,6 +7,14 @@ function path(dir, name) {
     return dir + name;
 }
 
+function minifySvg(svgString) {
+    // 使用正则表达式去除空格、制表符、换行符和回车符，但保留标签之间的空格
+    return svgString
+        .replace(/>\s+</g, '><') // 去除标签之间的空白符
+        .replace(/[\t\n\r]/g, '') // 去除制表符、换行符和回车符
+        .replace(/\s{2,}/g, ' '); // 将多个空格替换为单个空格
+}
+
 function removeDesc(svg) {
     // 删除 <desc> 标签（<desc>Created with Fabric.js 1.6.3</desc>）
     const parser = new DOMParser();
@@ -95,7 +103,7 @@ function svg2Blob(svg) {
 // 保存sketched.svg
 function writeSketchedImage(fileName, data) {
     // var dataObj = dataURL2Blob(data);
-    var newSvg = convertTspansToText(removeDesc(data)); // DEBUG：修复fabric.js文本偏移问题
+    var newSvg = minifySvg(convertTspansToText(removeDesc(data))); // DEBUG：修复fabric.js文本偏移问题
     // alert("newSvg: " + newSvg);
     var dataObj = svg2Blob(newSvg);
 
