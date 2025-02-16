@@ -1,3 +1,5 @@
+var currentUsername = "user";
+
 function path(dir, name) {
     if (dir == "download") {
         dir = "Download/";
@@ -12,7 +14,8 @@ function minifySvg(svgString) {
     return svgString
         .replace(/>\s+</g, '><') // 去除标签之间的空白符
         .replace(/[\t\n\r]/g, '') // 去除制表符、换行符和回车符
-        .replace(/\s{2,}/g, ' '); // 将多个空格替换为单个空格
+        .replace(/\s{2,}/g, ' ') // 将多个空格替换为单个空格
+        ;
 }
 
 function removeDesc(svg) {
@@ -49,7 +52,7 @@ function convertTspansToText(svg) {
             // 复制<tspan>的x和y属性到<text>
             if (tspanElement.hasAttribute('x')) {
                 if (textElement.hasAttribute('x')) {
-                    textElement.setAttribute('x', `${parseFloat(textElement.getAttribute('x')) 
+                    textElement.setAttribute('x', `${parseFloat(textElement.getAttribute('x'))
                         + parseFloat(tspanElement.getAttribute('x'))}`
                     );
                 } else {
@@ -58,7 +61,7 @@ function convertTspansToText(svg) {
             }
             if (tspanElement.hasAttribute('y')) {
                 if (textElement.hasAttribute('y')) {
-                    textElement.setAttribute('y', `${parseFloat(textElement.getAttribute('y')) 
+                    textElement.setAttribute('y', `${parseFloat(textElement.getAttribute('y'))
                         + parseFloat(tspanElement.getAttribute('y'))}`
                     );
                 }
@@ -73,7 +76,7 @@ function convertTspansToText(svg) {
             // 移除<tspan>元素
             tspanElement.remove();
 
-            // 注意：<text>元素内的所有其他子元素（如果有的话）都被删除
+            // 注意：<text>元素内的所有其他子元素（如果有的话）都被删除，该函数仅适用于本项目情况
         });
     });
 
@@ -102,43 +105,49 @@ function svg2Blob(svg) {
 
 // 保存sketched.svg
 function writeSketchedImage(fileName, data) {
+    // 准备数据
     // var dataObj = dataURL2Blob(data);
     var newSvg = minifySvg(convertTspansToText(removeDesc(data))); // DEBUG：修复fabric.js文本偏移问题
     // alert("newSvg: " + newSvg);
     var dataObj = svg2Blob(newSvg);
 
-    var privatePath = path("files-external", fileName);
-
-    // var publicPath = path("download", fileName);
-    var publicDir = "Download/" + "ChartSketchTool";
-    var publicPath = publicDir + "/" + fileName;
+    // 准备路径
+    var privateDir = path("files-external", currentUsername);
+    var publicRootDir = "Download/ChartSketchTool";
+    // var publicPath = `${publicRootDir}/${currentUsername}/${fileName}`;
 
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
         // 保存到沙箱
-        fs.root.getFile(privatePath, { create: true, exclusive: false },
-            function (fileEntry) {
-                writeFile(fileEntry, dataObj,
-                    function () {
-                        // toast("文件写入成功");
-                    },
-                    onErrorWriteFile
+        fs.root.getDirectory(privateDir, { create: true },
+            function (dirEntry) {
+                dirEntry.getFile(fileName, { create: true, exclusive: false },
+                    function (fileEntry) {
+                        writeFile(fileEntry, dataObj,
+                            function () {
+                                // toast("文件写入成功");
+                            }, onErrorWriteFile
+                        );
+                    }, onErrorCreateFile
                 );
-            }, onErrorCreateFile
+            }, onErrorGetDir
         );
 
         // 保存到外部
-        fs.root.getDirectory(publicDir, { create: true }, function (dirEntry) {
-            dirEntry.getFile(fileName, { create: true, exclusive: false },
-                function (fileEntry) {
-                    writeFile(fileEntry, dataObj,
-                        function () {
-                            toast("save to " + publicPath);
-                        },
-                        onErrorWriteFile
-                    );
-                }, onErrorCreateFile
-            );
-        }, onErrorGetDir);
+        fs.root.getDirectory(publicRootDir, { create: true },
+            function (rootDirEntry) {
+                rootDirEntry.getDirectory(currentUsername, { create: true },
+                    function (dirEntry) {
+                        dirEntry.getFile(fileName, { create: true, exclusive: false },
+                            function (fileEntry) {
+                                writeFile(fileEntry, dataObj,
+                                    function () {
+                                        toast("save to " + fileEntry.fullPath.toString());
+                                    }, onErrorWriteFile
+                                );
+                            }, onErrorCreateFile
+                        );
+                    })
+            }, onErrorGetDir);
 
     }, onErrorLoadFs);
 }
@@ -187,7 +196,10 @@ function createAndWriteFile(filePath, dataObj) {
 }
 
 // 读取保存的Canvas图片
-function readCanvasImage(filePath, successCallback, errorCallback) {
+function readCanvasImage(fileName, successCallback, errorCallback) {
+    // 路径准备
+    var filePath = path("files-external", `${currentUsername}/${fileName}`);
+
     // 数据读取
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
 
@@ -209,6 +221,34 @@ function readCanvasImage(filePath, successCallback, errorCallback) {
         }, errorCallback("file not found"));
 
     }, errorCallback("文件系统加载失败"));
+}
+
+// 读取目录名列表
+function listDir(successCallback) {
+    // alert("正在读取文件列表……");
+
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+        // DEBUG：不能直接使用 fs.root，而要根据其路径重新获取一个 DirectoryEntry
+        var rootDirPath = path("files-external", "");
+        fs.root.getDirectory(rootDirPath, { create: false }, function (dirEntry) {
+            var rootDirReader = dirEntry.createReader();
+            rootDirReader.readEntries(
+                function (entries) {
+                    // alert(`成功取得长度为${entries.length}的Entry[]`);
+
+                    var dirList = [];
+                    entries.forEach(function (entry) {
+                        if (entry.isDirectory) {
+                            dirList.push(entry.name.toString());
+                        }
+                    });
+                    successCallback(dirList);
+                },
+                onErrorReadDir
+            );
+        }, onErrorGetDir);
+
+    }, onErrorLoadFs);
 }
 
 // 写文件
@@ -266,4 +306,8 @@ function onErrorReadFile(error) {
 // 文件写入失败回调
 function onErrorWriteFile(error) {
     toast("failed to write file", error.toString());
+}
+
+function onErrorReadDir(error) {
+    toast("failed to read directory", error.toString());
 }

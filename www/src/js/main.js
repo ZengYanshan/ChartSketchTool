@@ -220,7 +220,7 @@ $(function () {
         setCanvasBackgroundImage(datasetImgUrl(), "svg"); // 先设置图，防止读取失败没有图
         try {
             readCanvasImage(
-                path("files-external", canvasFileName()),
+                canvasFileName(),
                 setCanvasBackgroundImage,
                 function (error) {
                     // alert(error);

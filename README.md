@@ -27,6 +27,12 @@ jarsigner -verbose -keystore zys.keystore -signedjar app-signed.apk app-release-
 - JDK 17.0.11
 
 ### TODO
+
+- [ ] 界面增加用户名下拉选择、显示框，并可选择过往用户名
+- [ ] 改为保存到 `/用户名/xx_sketched.svg`
+- [ ] 读取文件夹名（即用户名）列表，作为用户名列表
+
+### DEBUG
 - [x] 序号撑不满整行：css不可在花括号内嵌套花括号
 - [x] 插件不适用当前版本
 - [x] 无法创建文件/申请不到存储权限
@@ -34,7 +40,7 @@ jarsigner -verbose -keystore zys.keystore -signedjar app-signed.apk app-release-
 - [ ] debug + signed, release, release + signed 无法安装
 - [ ] 加载65.png失败
 - [x] 移动端打开输入法会改变页面大小触发重载
-- [ ] 已存在的文件不可覆写
-- [ ] 保存键无用
-- [ ] 保存的svg读取有问题
+- [ ] 已存在的文件不可覆写，必须在设置授权
+- [x] 保存键无用
+- [x] 保存的svg读取有问题
 - [ ] 撤销时会把svg背景一并撤销
