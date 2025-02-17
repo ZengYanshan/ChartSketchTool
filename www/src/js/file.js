@@ -1,5 +1,3 @@
-var currentUsername = "user";
-
 function path(dir, name) {
     if (dir == "download") {
         dir = "Download/";

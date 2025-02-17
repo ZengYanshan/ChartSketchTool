@@ -9,7 +9,8 @@
 
     <title>Chart Sketch Tool</title>
     <link rel="shortcut icon" href="src/assets/img/favicon.png">
-    <link rel="stylesheet" type="text/css" href="src/css/main.css?v=1">
+    <link rel="stylesheet" type="text/css" href="src/css/user.css">
+    <link rel="stylesheet" type="text/css" href="src/css/main.css">
 </head>
 
 <body>
@@ -68,26 +69,9 @@
 
                     </div>
 
-                    
-
-                    <!-- 绘画区域 
-                    <div class="wrap-area wrap-modes">
-
-                        <!- 调节粗细 ->
-                        <div class="wrap-range">
-                            Line width:
-                            <input type="range" id="range" min="1" max="50" value="1">
-                            <input type="text" id="value" value="1">
-                        </div>
-                        <!- 调节颜色 ->
-                        <div class="wrap-draw-color">
-                            <label for="draw-color">
-                                Brush color:
-                                <input type="text" id="draw-color" class="draw-color" data-control="hue">
-                            </label>
-                        </div>
+                    <div class="wrap-area wrap-username">
+                        <a id="username" href="javascript:void(0)" onclick="showUserContainer();"></a>
                     </div>
-                    -->
 
                 </section>
 
@@ -136,39 +120,36 @@
 
                     </div>
 
-
                 </section>
 
             </section>
 
-            <!-- 颜色选择器窗口 -->
+            <!-- 笔刷选择器窗口 -->
             <div class="picker" id="color-picker"></div>
 
-            <!-- 粗细选择器窗口 -->
+            <!-- 粗细选择器窗口 
             <div class="picker" id="picker">
                 Line width:
                 <input type="range" id="range" min="1" max="50" value="1">
                 <input type="text" id="value" value="1">
-            </div>
+            </div>-->
 
-            <!-- 底部 
-            <footer>
-                <p class="copyright">©
-                    <a href="https://mburakerman.github.io/" target="_blank" rel="external">Mehmet Burak Erman</a>
-                </p>
-                <p class="about"><a href="#about" data-lity class="open-modal">About</a></p>
-            </footer>
-            -->
         </div>
 
+        <div class="container-fluid" id="container-user">
+            <div class="wrap-area wrap-user">
+                <label for="select-user">User: </label>
+                <select id="select-user">
+                    <!-- Existing usernames will be populated here -->
+                    <option value="option-create-new-user">Create New User</option>
+                </select>
+                <input type="text" id="new-username" placeholder="Enter new username">
+                <button id="choose-user">
+                    <img class="svg-icon" src="src/assets/img/save.svg">
+                </button>
+            </div>
+        </div>
 
-        <!-- <div id="about" class="lity-hide" style="background:#fff;">
-            <h2>Draweditor is a simple free online sketching, drawing, image editing tool.</h2>
-            <br>
-            <p>Quickly upload an image and start to edit. You can add images and texts on it and draw on it. Also it's
-                possible
-                to set background color of canvas to draw awesome sketches.</p>
-        </div> -->
     </div>
 
     <!-- lib -->
@@ -181,6 +162,7 @@
     <script type="text/javascript" src="src/js/insight_nvBench.js"></script>
     <!-- dev -->
     <script type="text/javascript" src="src/js/dialogs.js"></script>
+    <script type="text/javascript" src="src/js/user.js"></script>
     <script type="text/javascript" src="src/js/file.js"></script>
     <script type="text/javascript" src="src/js/main.js"></script>
     <!-- test -->
