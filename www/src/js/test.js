@@ -1,6 +1,6 @@
 function test() {
     toast("测试中……");
-    listDir(printList);
+    listUserDir(printList);
     
 }
 

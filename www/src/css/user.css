@@ -1,0 +1,31 @@
+#container-user {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: #00000080;
+
+    display: none;
+}
+
+.wrap-user {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    width: 16em;
+    height: 12em;
+
+    background-color: #f9f9f9;
+}
+
+#username {
+    color: #a1c0b2;
+    
+}

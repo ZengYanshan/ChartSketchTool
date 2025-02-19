@@ -14,7 +14,7 @@
     <allow-navigation href="*"/>
 
     <platform name="android">
-        <!-- 图标 -->
+        <!-- APP 图标 -->
         <!-- <icon src="res/icon/android/mipmap-ldpi/ic_launcher.png" density="ldpi" /> -->
         <icon src="res/icon/android/mipmap-mdpi/ic_launcher.png" density="mdpi" />
         <icon src="res/icon/android/mipmap-hdpi/ic_launcher.png" density="hdpi" />

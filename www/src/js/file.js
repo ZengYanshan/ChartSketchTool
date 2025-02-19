@@ -150,6 +150,76 @@ function writeSketchedImage(fileName, data) {
     }, onErrorLoadFs);
 }
 
+// 读取保存的Canvas图片
+function readCanvasImage(fileName, successCallback, errorCallback) {
+    // 路径准备
+    var filePath = path("files-external", `${currentUsername}/${fileName}`);
+
+    // 数据读取
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+
+        fs.root.getFile(filePath, { create: false }, function (fileEntry) {
+            // 读取文件
+            fileEntry.file(function (file) {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    toast("读取文件完成：" + this.result);
+                    successCallback(this.result, "svg");
+                };
+                // file.type == 'image/svg+xml')
+                reader.readAsText(file);
+            }, errorCallback());
+
+            // alert("读取结果：", fileEntry.toURL());
+            // successCallback(fileEntry.toURL(), "png");
+
+        }, errorCallback("file not found"));
+
+    }, errorCallback("文件系统加载失败"));
+}
+
+// 读取用户（即目录名）列表
+function listUserDir(successCallback) {
+    // alert("正在读取文件列表……");
+
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+        // DEBUG：不能直接使用 fs.root，而要根据其路径重新获取一个 DirectoryEntry
+        var rootDirPath = path("files-external", "");
+        fs.root.getDirectory(rootDirPath, { create: false }, function (dirEntry) {
+            var rootDirReader = dirEntry.createReader();
+            rootDirReader.readEntries(
+                function (entries) {
+                    // alert(`成功取得长度为${entries.length}的Entry[]`);
+
+                    var dirList = [];
+                    entries.forEach(function (entry) {
+                        if (entry.isDirectory) {
+                            dirList.push(entry.name.toString());
+                        }
+                    });
+                    successCallback(dirList);
+                },
+                onErrorReadDir
+            );
+        }, onErrorGetDir);
+
+    }, onErrorLoadFs);
+}
+
+// 创建用户（即目录）
+function createUserDir(dirName) {
+    var privateDirPath = path("files-external", dirName);
+    var publicDirPath = path("download", `ChartSketchTool/${dirName}`);
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+        fs.root.getDirectory(privateDirPath, { create: true }, function (dirEntry) {
+            toast(`创建用户${dirName}成功`);
+        }, onErrorGetDir);
+        fs.root.getDirectory(publicDirPath, { create: true }, function (dirEntry) {
+            // toast("创建文件夹成功：" + dirEntry.fullPath);
+        }, onErrorGetDir);
+    }, onErrorLoadFs);
+}
+
 // 创建文件夹
 function createDir(dirPath) {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
@@ -193,61 +263,7 @@ function createAndWriteFile(filePath, dataObj) {
     }, onErrorLoadFs);
 }
 
-// 读取保存的Canvas图片
-function readCanvasImage(fileName, successCallback, errorCallback) {
-    // 路径准备
-    var filePath = path("files-external", `${currentUsername}/${fileName}`);
 
-    // 数据读取
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-
-        fs.root.getFile(filePath, { create: false }, function (fileEntry) {
-            // 读取文件
-            fileEntry.file(function (file) {
-                var reader = new FileReader();
-                reader.onloadend = function () {
-                    toast("读取文件完成：" + this.result);
-                    successCallback(this.result, "svg");
-                };
-                // file.type == 'image/svg+xml')
-                reader.readAsText(file);
-            }, errorCallback());
-
-            // alert("读取结果：", fileEntry.toURL());
-            // successCallback(fileEntry.toURL(), "png");
-
-        }, errorCallback("file not found"));
-
-    }, errorCallback("文件系统加载失败"));
-}
-
-// 读取目录名列表
-function listDir(successCallback) {
-    // alert("正在读取文件列表……");
-
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
-        // DEBUG：不能直接使用 fs.root，而要根据其路径重新获取一个 DirectoryEntry
-        var rootDirPath = path("files-external", "");
-        fs.root.getDirectory(rootDirPath, { create: false }, function (dirEntry) {
-            var rootDirReader = dirEntry.createReader();
-            rootDirReader.readEntries(
-                function (entries) {
-                    // alert(`成功取得长度为${entries.length}的Entry[]`);
-
-                    var dirList = [];
-                    entries.forEach(function (entry) {
-                        if (entry.isDirectory) {
-                            dirList.push(entry.name.toString());
-                        }
-                    });
-                    successCallback(dirList);
-                },
-                onErrorReadDir
-            );
-        }, onErrorGetDir);
-
-    }, onErrorLoadFs);
-}
 
 // 写文件
 function writeFile(fileEntry, dataObj, successCallback, errorCallback) {

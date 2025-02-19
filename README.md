@@ -44,3 +44,7 @@ jarsigner -verbose -keystore zys.keystore -signedjar app-signed.apk app-release-
 - [x] 保存键无用
 - [x] 保存的svg读取有问题
 - [ ] 撤销时会把svg背景一并撤销
+- [ ] 页面加载完成后无法调用获取文件的函数，调用alert会卡死
+- [ ] 向下拉选择框中添加缺少的选项时，无法添加在Create New User之前
+- [ ] user.js中无法调用main.js的函数，可能是因为函数在load事件中
+- [ ] 刚启动时以及切换用户后不能立即刷新画布
