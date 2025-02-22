@@ -1,3 +1,11 @@
+#wrap-username {
+    /* 竖直居中 */
+    display: flex;
+    align-items: center;
+
+    margin: 0 0 0 0.5rem;
+}
+
 #username {
     color: #a1c0b2;
 }
@@ -29,11 +37,13 @@
     background-color: #f9f9f9;
     border-radius: 5px;
 
-    /* 水平居中 */
-    text-align: center;
+    
     /* 竖直居中 */
     display: flex;
     align-items: center;
+    /* 水平居中 */
+    justify-content: center;
+    text-align: center;
 }
 
 #wrap-user {
