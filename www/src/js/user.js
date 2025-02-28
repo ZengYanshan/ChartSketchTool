@@ -117,13 +117,13 @@ function updateUserSelect(usernames) {
     });
 
     // 设置默认选中的选项
-    if (usernames.includes(currentUsername)) {
-        userSelect.value = currentUsername;
-        newUsernameInput.style.display = "none";
-    } else {
-        userSelect.value = "option-create-new-user";
-        newUsernameInput.style.display = "inline";
-    }
+    // if (usernames.includes(currentUsername)) {
+    //     userSelect.value = currentUsername;
+    //     newUsernameInput.style.display = "none";
+    // } else {
+    //     userSelect.value = "option-create-new-user";
+    //     newUsernameInput.style.display = "inline";
+    // }
 }
 
 function getSelectValues(select) {

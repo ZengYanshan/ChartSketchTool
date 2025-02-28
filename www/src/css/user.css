@@ -1,3 +1,15 @@
+#wrap-username {
+    /* 竖直居中 */
+    display: flex;
+    align-items: center;
+
+    margin: 0 0 0 0.5rem;
+}
+
+#username {
+    color: #a1c0b2;
+}
+
 #container-user {
     position: absolute;
     z-index: 1000;
@@ -11,7 +23,7 @@
     display: none;
 }
 
-.wrap-user {
+#user-box {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -19,13 +31,66 @@
     right: 0;
     margin: auto;
 
-    width: 16em;
-    height: 12em;
+    width: 16rem;
+    height: 12rem;
 
     background-color: #f9f9f9;
+    border-radius: 5px;
+
+    
+    /* 竖直居中 */
+    display: flex;
+    align-items: center;
+    /* 水平居中 */
+    justify-content: center;
+    text-align: center;
 }
 
-#username {
-    color: #a1c0b2;
-    
+#wrap-user {
+    /* margin: auto 0; */
+}
+
+label {
+    font-weight: bold;
+}
+
+/* 选择框 */
+select {
+    background-color: transparent;
+    border-style: solid;
+    border-width: 0 0 2px;
+    border-color: #a1c0b2;
+
+    /* 清除默认 select 样式 */
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    /* 在选择框的最右侧中间显示小箭头图片 */
+    background: url("../assets/img/down.svg") no-repeat scroll right center transparent;
+    /* 为下拉小箭头留出一点位置，避免被文字覆盖 */
+    padding-right: 16px;
+
+    color: #717f86;
+
+    width: 9.4rem;
+}
+
+/* 输入框 */
+#new-username {
+    background-color: transparent;
+    border-width: 0 0 2px;
+    border-color: #a1c0b2;
+
+    color: #717f86;
+    caret-color: #a1c0b2;
+
+    width: 12rem;
+    margin: 0.5rem 0 0;
+}
+
+
+
+#choose-user {
+    display: block;
+    margin: 1rem auto 0;
 }

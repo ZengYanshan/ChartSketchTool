@@ -204,6 +204,7 @@ body {
 
 #current-id {
     background-color: transparent;
+    border-style: solid;
     border-width: 0 0 2px;
     border-color: #ff7a7a;
 
