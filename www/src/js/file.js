@@ -101,6 +101,8 @@ function svg2Blob(svg) {
     return blob;
 }
 
+
+
 // 保存sketched.svg
 function writeSketchedImage(fileName, data) {
     // 准备数据

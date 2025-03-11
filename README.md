@@ -5,6 +5,8 @@ cordova platform remove android
 cordova platform add android@13.0.0
 
 adb uninstall com.zys.chartsketchtool
+# PS
+adb uninstall com.zys.chartsketchtool; cordova run android
 cordova build android
 cordova run android
 

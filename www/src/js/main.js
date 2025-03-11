@@ -44,6 +44,30 @@ var currentInsightObj;
 const maxBrushWidth = 36;
 var defaultBrush = "#ea484d05"; // 前六位为颜色，后二位转为粗细
 
+function vegaLiteSpecToSvg(vlSpec, successCallback) {
+    vegaEmbed('#view', vlSpec).then(function (result) {
+        // alert("vegaEmbed");
+        var view = result.view;
+        view.toSVG().then(function (svg) {
+            // console.log(svg);
+            // toast(svg);
+            successCallback(svg);
+            // return svg;
+
+            // 下载 svg
+            // const filename = 'chart.svg';
+            // const url = 'data:image/svg+xml,' + encodeURIComponent(svg);
+            // const link = document.createElement('a');
+            // link.setAttribute('href', url);
+            // link.setAttribute('target', '_blank');
+            // link.setAttribute('download', filename);
+            // link.dispatchEvent(new MouseEvent('click'));
+        }).catch(function (error) {
+            alert(error);
+        });
+    });
+}
+
 
 $(function () {
     // loader
@@ -57,11 +81,13 @@ $(function () {
 
     // -------------------------nvBench-------------------------
 
-    function datasetImgUrl() {
+    function datasetUrl() {
         // 4.svg
-        var imgUrl = `./src/assets/dataset/svg/${currentInsightObj.key}.svg`;
-        // console.log("img url: ", imgUrl);
-        return imgUrl;
+        // var url = `./src/assets/dataset/svg/${currentInsightObj.key}.svg`;
+
+        // 4_vega_lite.json
+        var url = `./src/assets/dataset/vega_lite/${currentInsightObj.key}_vega_lite.json`;
+        return url;
     }
     function canvasFileName() {
         // 4_1_sketched.svg
@@ -122,7 +148,7 @@ $(function () {
             canvas.clear();
             clearCanvasState();
 
-            setCanvasBackgroundImage(datasetImgUrl(), "svg");
+            setCanvasBackgroundImage(datasetUrl(), "svg");
             updateCanvasState();
             // saveCanvas();
 
@@ -137,9 +163,9 @@ $(function () {
 
         fabric.Image.fromURL(img, function (oImg) {
             // 缩小图片至正好能放入画布
-                var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
-                oImg.scale(scale);
-            
+            var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
+            oImg.scale(scale);
+
             // 居中放置背景图片
             canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas), {
                 originX: 'center',
@@ -207,6 +233,11 @@ $(function () {
         if (type == "svg") {
             if (img.endsWith(".svg")) {
                 setCanvasBackgroundSvgFromUrl(img);
+            } else if (img.endsWith("_vega_lite.json")) {
+                // alert(`img.endsWith("_vega_lite.json")`);
+                $.getJSON(img, function (vlSpec) {
+                    vegaLiteSpecToSvg(vlSpec, setCanvasBackgroundSvgFromString);
+                });
             } else {
                 setCanvasBackgroundSvgFromString(img);
             }
@@ -217,7 +248,7 @@ $(function () {
     function loadCanvasImage() {
         canvas.backgroundImage = false;
         canvas.clear();
-        setCanvasBackgroundImage(datasetImgUrl(), "svg"); // 先设置图，防止读取失败没有图
+        setCanvasBackgroundImage(datasetUrl(), "svg"); // 先设置图，防止读取失败没有图
         try {
             readCanvasImage(
                 canvasFileName(),
@@ -229,7 +260,7 @@ $(function () {
             )
         } catch (e) {
             console.log(e);
-            setCanvasBackgroundImage(datasetImgUrl(), "svg");
+            setCanvasBackgroundImage(datasetUrl(), "svg");
             updateCanvasState();
         }
         updateCanvasState();
