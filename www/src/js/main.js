@@ -45,6 +45,9 @@ const maxBrushWidth = 36;
 var defaultBrush = "#ea484d05"; // 前六位为颜色，后二位转为粗细
 
 function vegaLiteSpecToSvg(vlSpec, successCallback) {
+    // 输入：
+    // vlSpec：vega_lite JSON 对象
+    // successCallback：成功回调函数，参数为 svg 字符串
     vegaEmbed('#view', vlSpec).then(function (result) {
         // alert("vegaEmbed");
         var view = result.view;
@@ -86,7 +89,10 @@ $(function () {
         // var url = `./src/assets/dataset/svg/${currentInsightObj.key}.svg`;
 
         // 4_vega_lite.json
-        var url = `./src/assets/dataset/vega_lite/${currentInsightObj.key}_vega_lite.json`;
+        // var url = `./src/assets/dataset/vega_lite/${currentInsightObj.key}_vega_lite.json`;
+
+        // {"width": 200, "height": 150, "data": {"values": [{"category": "AssocProf", "value": 2}, {"category": "AsstProf", "value": 18}, {"category": "Professor", "value": 14}]}, "mark": {"type": "arc", "innerRadius": 5, "stroke": "#fff"}, "encoding": {"theta": {"field": "value", "type": "quantitative", "stack": true}, "color": {"field": "category", "type": "nominal", "scale": {"domain": ["AssocProf", "AsstProf", "Professor"]}, "legend": {"orient": "bottom", "title": null, "symbolType": "square", "direction": "horizontal", "values": ["AsstProf", "Professor"]}}, "order": {"field": "value", "type": "quantitative", "sort": "descending"}, "radius": {"field": "value", "scale": {"type": "linear", "zero": true, "rangeMin": 20}}, "tooltip": [{"field": "category", "type": "nominal"}, {"field": "value", "type": "quantitative"}]}, "config": {"legend": {"layout": {"anchor": "middle", "padding": 10}}}}
+        var url = insight_nvBench[currentId - 1].vega_lite;
         return url;
     }
     function canvasFileName() {
@@ -231,14 +237,20 @@ $(function () {
 
         // 根据结尾是否为".svg"，判断img为url还是svgstring
         if (type == "svg") {
-            if (img.endsWith(".svg")) {
+            if (typeof img === "object") {
+                // vega_lite Object
+                vegaLiteSpecToSvg(img, setCanvasBackgroundSvgFromString);
+            } else if (img.endsWith(".svg")) {
+                // svg 文件
                 setCanvasBackgroundSvgFromUrl(img);
             } else if (img.endsWith("_vega_lite.json")) {
+                // vega_lite JSON 文件
                 // alert(`img.endsWith("_vega_lite.json")`);
                 $.getJSON(img, function (vlSpec) {
                     vegaLiteSpecToSvg(vlSpec, setCanvasBackgroundSvgFromString);
                 });
             } else {
+                // svg 字符串
                 setCanvasBackgroundSvgFromString(img);
             }
         } else if (type == "png") {
