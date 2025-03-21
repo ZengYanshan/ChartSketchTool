@@ -38,7 +38,7 @@ $(document).on("vmousemove", "body", function (e) {
 // })
 
 // -------------------------global-------------------------
-const maxId = insight_nvBench.length;
+const maxId = insight_ChartToText.length;
 var currentId = 1;
 var currentInsightObj;
 const maxBrushWidth = 36;
@@ -92,7 +92,10 @@ $(function () {
         // var url = `./src/assets/dataset/vega_lite/${currentInsightObj.key}_vega_lite.json`;
 
         // {"width": 200, "height": 150, "data": {"values": [{"category": "AssocProf", "value": 2}, {"category": "AsstProf", "value": 18}, {"category": "Professor", "value": 14}]}, "mark": {"type": "arc", "innerRadius": 5, "stroke": "#fff"}, "encoding": {"theta": {"field": "value", "type": "quantitative", "stack": true}, "color": {"field": "category", "type": "nominal", "scale": {"domain": ["AssocProf", "AsstProf", "Professor"]}, "legend": {"orient": "bottom", "title": null, "symbolType": "square", "direction": "horizontal", "values": ["AsstProf", "Professor"]}}, "order": {"field": "value", "type": "quantitative", "sort": "descending"}, "radius": {"field": "value", "scale": {"type": "linear", "zero": true, "rangeMin": 20}}, "tooltip": [{"field": "category", "type": "nominal"}, {"field": "value", "type": "quantitative"}]}, "config": {"legend": {"layout": {"anchor": "middle", "padding": 10}}}}
-        var url = insight_nvBench[currentId - 1].vega_lite;
+        // var url = insight_ChartToText[currentId - 1].vega_lite;
+
+        // 1.png
+        var url = `./src/assets/dataset/chart-to-text/imgs/${currentInsightObj.key}.png`;
         return url;
     }
     function canvasFileName() {
@@ -260,7 +263,7 @@ $(function () {
     function loadCanvasImage() {
         canvas.backgroundImage = false;
         canvas.clear();
-        setCanvasBackgroundImage(datasetUrl(), "svg"); // 先设置图，防止读取失败没有图
+        setCanvasBackgroundImage(datasetUrl(), "png"); // 先设置图，防止读取失败没有图
         try {
             readCanvasImage(
                 canvasFileName(),
@@ -272,7 +275,7 @@ $(function () {
             )
         } catch (e) {
             console.log(e);
-            setCanvasBackgroundImage(datasetUrl(), "svg");
+            setCanvasBackgroundImage(datasetUrl(), "png");
             updateCanvasState();
         }
         updateCanvasState();
@@ -320,7 +323,7 @@ $(function () {
 
         // 更新currentId, currentInsightObj
         currentId = id;
-        currentInsightObj = insight_nvBench[currentId - 1]; // 数组下标从 0 开始
+        currentInsightObj = insight_ChartToText[currentId - 1]; // 数组下标从 0 开始
 
         // 更新页面文本
         $("#current-id").val(currentId);
