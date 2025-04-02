@@ -157,7 +157,7 @@ $(function () {
             canvas.clear();
             clearCanvasState();
 
-            setCanvasBackgroundImage(datasetUrl(), "svg");
+            setCanvasBackgroundImage(datasetUrl());
             updateCanvasState();
             // saveCanvas();
 
@@ -233,37 +233,35 @@ $(function () {
             });
         });
     }
-    function setCanvasBackgroundImage(img, type) {
+    function setCanvasBackgroundImage(img) {
         // 设置画布背景图片
         // 不触发object:added
         // img：img.src(png/svg) | dataURL
 
-        // 根据结尾是否为".svg"，判断img为url还是svgstring
-        if (type == "svg") {
-            if (typeof img === "object") {
-                // vega_lite Object
-                vegaLiteSpecToSvg(img, setCanvasBackgroundSvgFromString);
-            } else if (img.endsWith(".svg")) {
-                // svg 文件
-                setCanvasBackgroundSvgFromUrl(img);
-            } else if (img.endsWith("_vega_lite.json")) {
-                // vega_lite JSON 文件
-                // alert(`img.endsWith("_vega_lite.json")`);
-                $.getJSON(img, function (vlSpec) {
-                    vegaLiteSpecToSvg(vlSpec, setCanvasBackgroundSvgFromString);
-                });
-            } else {
-                // svg 字符串
-                setCanvasBackgroundSvgFromString(img);
-            }
-        } else if (type == "png") {
+        if (typeof img === "object") {
+            // vega_lite Object
+            vegaLiteSpecToSvg(img, setCanvasBackgroundSvgFromString);
+        } else if (img.endsWith(".svg")) {
+            // svg 文件
+            setCanvasBackgroundSvgFromUrl(img);
+        } else if (img.endsWith("_vega_lite.json")) {
+            // vega_lite JSON 文件
+            // alert(`img.endsWith("_vega_lite.json")`);
+            $.getJSON(img, function (vlSpec) {
+                vegaLiteSpecToSvg(vlSpec, setCanvasBackgroundSvgFromString);
+            });
+
+        } else if (img.endsWith("png")) {
             setCanvasBackgroundPng(img);
+        } else {
+            // svg 字符串
+            setCanvasBackgroundSvgFromString(img);
         }
     }
     function loadCanvasImage() {
         canvas.backgroundImage = false;
         canvas.clear();
-        setCanvasBackgroundImage(datasetUrl(), "png"); // 先设置图，防止读取失败没有图
+        setCanvasBackgroundImage(datasetUrl()); // 先设置图，防止读取失败没有图
         try {
             readCanvasImage(
                 canvasFileName(),
@@ -275,7 +273,7 @@ $(function () {
             )
         } catch (e) {
             console.log(e);
-            setCanvasBackgroundImage(datasetUrl(), "png");
+            setCanvasBackgroundImage(datasetUrl());
             updateCanvasState();
         }
         updateCanvasState();
@@ -302,18 +300,6 @@ $(function () {
         // console.log(canvas.toDataURL());
         // $("#save").attr("download", "canvas");
     });
-    // 导出按钮
-    // $("#export").click(function () {
-    //     readCanvasImage(
-    //         path("files-external", canvasFileName()),
-    //         setCanvasBackgroundImage,
-    //         function (error) {
-    //             toast(error);
-    //         }
-    //     );
-    // });
-    // 初始化
-    // loadCanvasImage();
 
     // -------------------------Insight-------------------------
 

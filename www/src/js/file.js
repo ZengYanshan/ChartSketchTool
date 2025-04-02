@@ -166,7 +166,7 @@ function readCanvasImage(fileName, successCallback, errorCallback) {
                 var reader = new FileReader();
                 reader.onloadend = function () {
                     toast("读取文件完成：" + this.result);
-                    successCallback(this.result, "svg");
+                    successCallback(this.result);
                 };
                 // file.type == 'image/svg+xml')
                 reader.readAsText(file);
