@@ -1,9 +1,9 @@
-#report-error {
+#report-bad-data-link {
     color: #ff7a7a;
     /* text-decoration: underline; */
 }
 
-#container-report-error {
+#container-report-bad-data {
     position: absolute;
     z-index: 1000;
     top: 0;
@@ -16,7 +16,7 @@
     display: none;
 }
 
-#report-error-box {
+#report-bad-data-box {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -40,7 +40,7 @@
     text-align: center;
 }
 
-#prompt-report-error{
+#prompt-report-bad-data{
     font-size: 1.2rem;
     font-weight: bold;
 }
@@ -63,7 +63,7 @@
     resize: none;
 }
 
-#wrap-report-error-button{
+#wrap-report-bad-data-button{
 
 }
 
@@ -71,6 +71,6 @@
     background-color: #bebebe;
 }
 
-#change-error-mark {
+#change-bad-data-mark {
     background-color: #ff7a7a;
 }

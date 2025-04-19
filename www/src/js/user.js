@@ -14,7 +14,7 @@ $(function () {
         }
     });
 
-    // DEBUG：刚打开页面时无法调用读取文件的函数，在此时再读取以弥补。这导致展开下拉列表时闪烁以及二次点击展开后当前选项回到当前用户
+    // DEBUG 刚打开页面时无法调用读取文件的函数，在此时再读取以弥补。这导致展开下拉列表时闪烁以及二次点击展开后当前选项回到当前用户
     userSelect.addEventListener("click", function () {
         listUserDir(updateUserSelect);
     });
@@ -53,7 +53,8 @@ $(function () {
     // }
     // updateUserSelect(usernames);
 
-    showUserContainer();
+    // TODO 调试中暂时不用
+    // showUserContainer();
 });
 
 
