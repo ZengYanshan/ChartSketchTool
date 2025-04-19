@@ -10,6 +10,7 @@
     <title>Chart Sketch Tool</title>
     <link rel="shortcut icon" href="src/assets/img/favicon.png">
     <link rel="stylesheet" type="text/css" href="src/css/user.css">
+    <link rel="stylesheet" type="text/css" href="src/css/report-error.css">
     <link rel="stylesheet" type="text/css" href="src/css/main.css">
 </head>
 
@@ -45,7 +46,7 @@
                         <table>
                             <tbody>
                                 <tr>
-                                    <th>(NL-VIS) ID</th>
+                                    <th>Data ID</th>
                                     <th>:</td>
                                     <td id="insight-text-id">id</td>
                                 </tr>
@@ -66,7 +67,7 @@
                             <div>Description: <span id="insight-text-description"></span></div>
                         </div> -->
 
-                        <div class="prompt">Please sketch on the chart, and save it after sketching.</div>
+                        <div class="prompt">Please sketch on the chart, and save it after sketching. <a id="report-error" href="javascript:void(0)" onclick="showReportErrorContainer();">If there is something wrong, click here to report and correct it.</a></div>
 
 
                     </div>
@@ -161,6 +162,23 @@
 
         </div>
 
+        <!-- 报错面板 -->
+        <div class="container-fluid" id="container-report-error">
+            <div class="box" id="report-error-box">
+                <div id="prompt-report-error">Report this data as bad data?</div>
+                <textarea type="text" id="new-description" placeholder="Enter correct insight description or your reason."></textarea>
+                <div class="wrap-area" id="wrap-report-error-button">
+                    <button id="cancel">
+                        <img class="svg-icon" src="src/assets/img/cancel.svg">
+                    </button>
+                    <button id="change-error-mark">
+                        <img class="svg-icon" src="src/assets/img/save.svg">
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
         <!-- 用于 vega-lite 转 vega -->
         <div id="view" style="display: none;"></div>
 
@@ -178,12 +196,14 @@
     <!-- data -->
     <!-- <script type="text/javascript" src="src/js/insight_nvBench.js"></script> -->
     <!-- <script type="text/javascript" src="src/js/insight_nvBench_vega_lite.js"></script> -->
-    <script type="text/javascript" src="src/js/insight_chart-to-text.js"></script>
+    <!-- <script type="text/javascript" src="src/js/insight_ChartToText.js"></script> -->
+    <script type="text/javascript" src="src/js/insight_ChartToText_vega_lite.js"></script>
     <!-- dev -->
     <script type="text/javascript" src="src/js/dialogs.js"></script>
     <script type="text/javascript" src="src/js/vis.js"></script>
     <script type="text/javascript" src="src/js/user.js"></script>
     <script type="text/javascript" src="src/js/file.js"></script>
+    <script type="text/javascript" src="src/js/report-error.js"></script>
     <script type="text/javascript" src="src/js/main.js"></script>
     <!-- test -->
     <script type="text/javascript" src="src/js/test.js"></script>

@@ -179,7 +179,7 @@ body {
 
 .left-column {
     width: 100%;
-    height: 100%;
+    height: 95%;
     text-align: center;
 }
 
@@ -242,6 +242,8 @@ table {
     /* font-size: 18px; */
     color: #a1adb3;
 }
+
+
 
 .right-column {
     text-align: center;

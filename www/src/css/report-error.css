@@ -1,0 +1,76 @@
+#report-error {
+    color: #ff7a7a;
+    /* text-decoration: underline; */
+}
+
+#container-report-error {
+    position: absolute;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    background-color: #00000080;
+
+    display: none;
+}
+
+#report-error-box {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+
+    width: 20rem;
+    height: 16rem;
+
+    background-color: #f9f9f9;
+    border-radius: 5px;
+
+    
+    /* 竖直居中 */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* 水平居中 */
+    text-align: center;
+}
+
+#prompt-report-error{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#new-description {
+    background-color: transparent;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    border-color: #a1c0b2;
+
+    color: #717f86;
+    caret-color: #a1c0b2;
+
+    width: 16rem;
+    height: 10rem;
+    margin: 0.5rem 0;
+
+    /* 禁止拉伸 */
+    resize: none;
+}
+
+#wrap-report-error-button{
+
+}
+
+#cancel {
+    background-color: #bebebe;
+}
+
+#change-error-mark {
+    background-color: #ff7a7a;
+}
