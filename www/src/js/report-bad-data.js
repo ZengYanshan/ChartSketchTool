@@ -1,20 +1,22 @@
-var currentIsBadData = false; // 是否是不良数据
-const reportBadDataLink = document.getElementById("report-bad-data-link");
 const reportBadDataContainer = document.getElementById("container-report-bad-data");
+const correctDescriptionTextarea = document.getElementById("correct-description");
+const changeBadDataMarkButton = document.getElementById("change-bad-data-mark");
 const cancelButton = document.getElementById("cancel");
 
 $(function () {
     cancelButton.addEventListener("click", function () {
         hideReportBadDataContainer();
     });
+
+    changeBadDataMarkButton.addEventListener("click", function () {
+        changeBadDataMark();
+    });
 });
 
 function showReportBadDataContainer() {
     // 显示报错面板
     reportBadDataContainer.style.display = "block";
-
-    // TODO 获取已有报错信息
-    // listUserDir(updateUserSelect);
+    // 获取已有报错信息在 main.js updateBadData() 中完成
 }
 
 function hideReportBadDataContainer() {
@@ -23,14 +25,30 @@ function hideReportBadDataContainer() {
 }
 
 function changeBadDataMark() {
-    // TODO
-    // 保存correct description到本地
+    console.log("change bad data mark");
+    // 获取当前输入
+    let correctDescription = correctDescriptionTextarea.value;
 
-    // 更新页面内容
-    // 更改红色链接文本
 
-    // 更改insight文本
+    if (correctDescription === "") {
+        // 若 correctDescription 为空，删除本地文件
+        deleteCorrectDescription(correctDescriptionFileName(), function () {
+            // 更新页面内容
+            updateBadData();
 
-    // 关闭报错面板
-    hideReportBadDataContainer();
+            // 关闭报错面板
+            hideReportBadDataContainer();
+        });
+    } else {
+        // 保存correct description到本地
+        writeCorrectDescription(correctDescriptionFileName(), correctDescription, function () {
+            // 更新页面内容
+            updateBadData();
+
+            // 关闭报错面板
+            hideReportBadDataContainer();
+        });
+    }
+
+
 }

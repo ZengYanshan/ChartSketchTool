@@ -53,8 +53,7 @@ $(function () {
     // }
     // updateUserSelect(usernames);
 
-    // TODO 调试中暂时不用
-    // showUserContainer();
+    showUserContainer();
 });
 
 

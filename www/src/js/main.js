@@ -44,6 +44,36 @@ var currentInsightObj;
 const maxBrushWidth = 36;
 var defaultBrush = "#ea484d05"; // 前六位为颜色，后二位转为粗细
 
+// -------------------------nvBench-------------------------
+
+function datasetUrl() {
+    // 4.svg
+    // var url = `./src/assets/dataset/svg/${currentInsightObj.key}.svg`;
+
+    // 4_vega_lite.json
+    // var url = `./src/assets/dataset/vega_lite/${currentInsightObj.key}_vega_lite.json`;
+
+    // {"width": 200, "height": 150, "data": {"values": [{"category": "AssocProf", "value": 2}, {"category": "AsstProf", "value": 18}, {"category": "Professor", "value": 14}]}, "mark": {"type": "arc", "innerRadius": 5, "stroke": "#fff"}, "encoding": {"theta": {"field": "value", "type": "quantitative", "stack": true}, "color": {"field": "category", "type": "nominal", "scale": {"domain": ["AssocProf", "AsstProf", "Professor"]}, "legend": {"orient": "bottom", "title": null, "symbolType": "square", "direction": "horizontal", "values": ["AsstProf", "Professor"]}}, "order": {"field": "value", "type": "quantitative", "sort": "descending"}, "radius": {"field": "value", "scale": {"type": "linear", "zero": true, "rangeMin": 20}}, "tooltip": [{"field": "category", "type": "nominal"}, {"field": "value", "type": "quantitative"}]}, "config": {"legend": {"layout": {"anchor": "middle", "padding": 10}}}}
+    var url = insight_ChartToText[currentId - 1].vega_lite;
+
+    // chart to text 1.png
+    // var url = `./src/assets/dataset/chart-to-text/imgs/${currentInsightObj.key}.png`;
+
+    return url;
+}
+function canvasFileName() {
+    // 4_1_sketched.svg
+    var fileName = `${currentId}_${currentInsightObj.key}_sketched.svg`;
+    return fileName;
+}
+
+function correctDescriptionFileName() {
+    // 4_1_correct_description.txt
+    var filename = `${currentId}_${currentInsightObj.key}_correct_description.txt`;
+    return filename;
+}
+
+
 function vegaLiteSpecToSvg(vlSpec, successCallback) {
     // 输入：
     // vlSpec：vega_lite JSON 对象
@@ -71,6 +101,39 @@ function vegaLiteSpecToSvg(vlSpec, successCallback) {
     });
 }
 
+function updateBadData() {
+    console.log("updateBadData()");
+    // 查找文件以判断是否已标为不良数据；换页触发更新
+    readCorrectDescription(correctDescriptionFileName(),
+        function (correctDescription) {
+            // 更新页面提示文本
+            $("#report-bad-data-link").text("This has been marked as bad data. Click here to unmark it.");
+            // insight 文本显示删除线
+            $("#insight-text-type").css("text-decoration-line", "line-through");
+            $("#insight-text-description").css("text-decoration-line", "line-through");
+            // 显示修改信息
+            $("#insight-text-correct-description").text(correctDescription);
+
+            // 更新报错面板提示文本
+            $("#prompt-report-bad-data").text("Marked as bad data. Change it?");
+            $("#correct-description").text(correctDescription);
+        },
+        function () {
+            // 更新页面提示文本
+            $("#report-bad-data-link").text("If there is something wrong, click here to mark it as bad data and correct it.");
+            // insight 文本不显示删除线
+            $("#insight-text-type").css("text-decoration-line", "none");
+            $("#insight-text-description").css("text-decoration-line", "none");
+            // 不显示修改信息
+            $("#insight-text-correct-description").text("");
+
+            // 更新报错面板提示文本
+            $("#prompt-report-bad-data").text("Mark it as bad data?");
+            $("#correct-description").text("");
+        }
+    );
+}
+
 
 $(function () {
     // loader
@@ -78,33 +141,9 @@ $(function () {
         $(".page_wrapper").show();
     });
 
-
-
-
-
-    // -------------------------nvBench-------------------------
-
-    function datasetUrl() {
-        // 4.svg
-        // var url = `./src/assets/dataset/svg/${currentInsightObj.key}.svg`;
-
-        // 4_vega_lite.json
-        // var url = `./src/assets/dataset/vega_lite/${currentInsightObj.key}_vega_lite.json`;
-
-        // {"width": 200, "height": 150, "data": {"values": [{"category": "AssocProf", "value": 2}, {"category": "AsstProf", "value": 18}, {"category": "Professor", "value": 14}]}, "mark": {"type": "arc", "innerRadius": 5, "stroke": "#fff"}, "encoding": {"theta": {"field": "value", "type": "quantitative", "stack": true}, "color": {"field": "category", "type": "nominal", "scale": {"domain": ["AssocProf", "AsstProf", "Professor"]}, "legend": {"orient": "bottom", "title": null, "symbolType": "square", "direction": "horizontal", "values": ["AsstProf", "Professor"]}}, "order": {"field": "value", "type": "quantitative", "sort": "descending"}, "radius": {"field": "value", "scale": {"type": "linear", "zero": true, "rangeMin": 20}}, "tooltip": [{"field": "category", "type": "nominal"}, {"field": "value", "type": "quantitative"}]}, "config": {"legend": {"layout": {"anchor": "middle", "padding": 10}}}}
-        var url = insight_ChartToText[currentId - 1].vega_lite;
-
-        // chart to text 1.png
-        // var url = `./src/assets/dataset/chart-to-text/imgs/${currentInsightObj.key}.png`;
-
-        return url;
-    }
-    function canvasFileName() {
-        // 4_1_sketched.svg
-        var fileName = `${currentId}_${currentInsightObj.key}_sketched.svg`;
-        return fileName;
-    }
     $("#max-id").text(maxId);
+
+
 
 
 
@@ -421,6 +460,8 @@ $(function () {
     //     }
     //     return false;
     // });
+
+    updateBadData();
 });
 
 // 关闭网页前确认

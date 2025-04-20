@@ -60,6 +60,10 @@
                                     <th>:</td>
                                     <td id="insight-text-description">description</td>
                                 </tr>
+                                <tr>
+                                    <th></th>
+                                    <th></td>
+                                    <td id="insight-text-correct-description">correct description</td>
                             </tbody>
                         </table>
                         <!-- <div>
@@ -67,7 +71,7 @@
                             <div>Description: <span id="insight-text-description"></span></div>
                         </div> -->
 
-                        <div class="prompt">Please sketch on the chart, and save it after sketching. <a id="report-bad-data-link" href="javascript:void(0)" onclick="showReportBadDataContainer();">If there is something wrong, click here to report and correct it.</a></div>
+                        <div class="prompt">Please sketch on the chart, and save it after sketching. <a id="report-bad-data-link" href="javascript:void(0)" onclick="showReportBadDataContainer();">If there is something wrong, click here to mark it as bad data and correct it.</a></div>
 
 
                     </div>
@@ -166,8 +170,8 @@
         <!-- 报错面板 -->
         <div class="container-fluid" id="container-report-bad-data">
             <div class="box" id="report-bad-data-box">
-                <div id="prompt-report-bad-data">Report this data as bad data?</div>
-                <textarea type="text" id="new-description" placeholder="Enter correct insight description or your reason."></textarea>
+                <div id="prompt-report-bad-data">Mark it as bad data?</div>
+                <textarea type="text" id="correct-description" placeholder="Enter correct insight description. If left blank, this data will not be marked as bad data."></textarea>
                 <div class="wrap-area" id="wrap-report-bad-data-button">
                     <button id="cancel">
                         <img class="svg-icon" src="src/assets/img/cancel.svg">
@@ -204,8 +208,8 @@
     <script type="text/javascript" src="src/js/vis.js"></script>
     <script type="text/javascript" src="src/js/user.js"></script>
     <script type="text/javascript" src="src/js/file.js"></script>
-    <script type="text/javascript" src="src/js/report-bad-data.js"></script>
     <script type="text/javascript" src="src/js/main.js"></script>
+    <script type="text/javascript" src="src/js/report-bad-data.js"></script>
     <!-- test -->
     <script type="text/javascript" src="src/js/test.js"></script>
 </body>

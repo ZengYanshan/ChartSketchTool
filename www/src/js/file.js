@@ -222,6 +222,103 @@ function createUserDir(dirName) {
     }, onErrorLoadFs);
 }
 
+// 读取修正后的insight description
+function readCorrectDescription(fileName, successCallback, errorCallback) {
+    // 路径准备
+    var filePath = path("files-external", `${currentUsername}/${fileName}`);
+
+    // 数据读取
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+
+        fs.root.getFile(filePath, { create: false }, function (fileEntry) {
+            // 读取文件
+            fileEntry.file(function (file) {
+                var reader = new FileReader();
+                reader.onloadend = function () {
+                    toast("读取文件完成：" + this.result);
+                    successCallback(this.result);
+                };
+                reader.readAsText(file);
+            }, onErrorReadFile);
+
+            // alert("读取结果：", fileEntry.toURL());
+            // successCallback(fileEntry.toURL(), "png");
+
+        }, errorCallback());
+
+    }, onErrorLoadFs);
+}
+
+// 写入修正后的insight description
+function writeCorrectDescription(fileName, data, successCallback) {
+    // 准备路径
+    var privateDir = path("files-external", currentUsername);
+    var publicRootDir = "Download/ChartSketchTool";
+    // var publicPath = `${publicRootDir}/${currentUsername}/${fileName}`;
+
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+        // 保存到沙箱
+        fs.root.getDirectory(privateDir, { create: true },
+            function (dirEntry) {
+                dirEntry.getFile(fileName, { create: true, exclusive: false },
+                    function (fileEntry) {
+                        writeFile(fileEntry, data,
+                            function () {
+                                // toast("文件写入成功");
+                                successCallback();
+                            }, onErrorWriteFile
+                        );
+                    }, onErrorCreateFile
+                );
+            }, onErrorGetDir
+        );
+
+        // 保存到外部
+        fs.root.getDirectory(publicRootDir, { create: true },
+            function (rootDirEntry) {
+                rootDirEntry.getDirectory(currentUsername, { create: true },
+                    function (dirEntry) {
+                        dirEntry.getFile(fileName, { create: true, exclusive: false },
+                            function (fileEntry) {
+                                writeFile(fileEntry, data,
+                                    function () {
+                                        toast("save to " + fileEntry.fullPath.toString());
+                                    }, onErrorWriteFile
+                                );
+                            }, onErrorCreateFile
+                        );
+                    })
+            }, onErrorGetDir);
+
+    }, onErrorLoadFs);
+}
+
+// 删除修正后的 insight description
+function deleteCorrectDescription(fileName, successCallback) {
+    // 准备路径
+    var privateFilePath = path("files-external", `${currentUsername}/${fileName}`);
+    var publicRootDir = "Download/ChartSketchTool";
+    var publicFilePath = `${publicRootDir}/${currentUsername}/${fileName}`;
+
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+        // 从沙箱删除
+        fs.root.getFile(privateFilePath, { create: false }, function (fileEntry) {
+            fileEntry.remove(function () {
+                toast("unmarked");
+                successCallback();
+            }, onErrorRemoveFile);
+        }, onErrorGetFile);
+
+        // 从外部删除
+        fs.root.getFile(publicFilePath, { create: false }, function (fileEntry) {
+            fileEntry.remove(function () {
+                // toast("unmarked");
+            }, onErrorRemoveFile);
+        }, onErrorGetFile);
+
+    }, onErrorLoadFs);
+}
+
 // 创建文件夹
 function createDir(dirPath) {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
@@ -326,4 +423,12 @@ function onErrorWriteFile(error) {
 
 function onErrorReadDir(error) {
     toast("failed to read directory", error.toString());
+}
+
+function onErrorGetFile(error) {
+    toast("failed to get file", error.toString());
+}
+
+function onErrorRemoveFile(error) {
+    toast("failed to remove file", error.toString());
 }
