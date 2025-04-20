@@ -108,7 +108,9 @@ function updateBadData() {
         function (correctDescription) {
             // 更新页面提示文本
             $("#report-bad-data-link").text("This has been marked as bad data. Click here to unmark it.");
-            // insight 文本显示删除线
+            // insight 文本颜色变淡，显示删除线
+            $("#insight-text-type").css("opacity", "0.8");
+            $("#insight-text-description").css("opacity", "0.8");
             $("#insight-text-type").css("text-decoration-line", "line-through");
             $("#insight-text-description").css("text-decoration-line", "line-through");
             // 显示修改信息
@@ -121,7 +123,9 @@ function updateBadData() {
         function () {
             // 更新页面提示文本
             $("#report-bad-data-link").text("If there is something wrong, click here to mark it as bad data and correct it.");
-            // insight 文本不显示删除线
+            // insight 文本颜色恢复，不显示删除线
+            $("#insight-text-type").css("opacity", "1");
+            $("#insight-text-description").css("opacity", "1");
             $("#insight-text-type").css("text-decoration-line", "none");
             $("#insight-text-description").css("text-decoration-line", "none");
             // 不显示修改信息
@@ -356,6 +360,7 @@ $(function () {
         $("#insight-text-id").text(currentInsightObj.key);
         $("#insight-text-type").text(currentInsightObj.type);
         $("#insight-text-description").text(currentInsightObj.description);
+        updateBadData();
 
         // 读入下一图
         loadCanvasImage();
@@ -461,7 +466,7 @@ $(function () {
     //     return false;
     // });
 
-    updateBadData();
+    // updateBadData();
 });
 
 // 关闭网页前确认
