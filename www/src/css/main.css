@@ -181,6 +181,10 @@ body {
     width: 100%;
     height: 95%;
     text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .wrap-index {
@@ -228,13 +232,14 @@ body {
 .wrap-insight-text {
     margin: 1rem 0.5em;
 
-
     text-align: justify;
     /* font-size: 20px; */
+
+    flex: 1;
 }
 
 table {
-    margin: 1rem 0;
+    margin: 0 0 1rem;
 }
 
 .prompt {

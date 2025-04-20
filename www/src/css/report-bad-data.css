@@ -18,14 +18,14 @@
 
 #report-bad-data-box {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: 50vh;
+    /* bottom: 0; */
+    left: 5vw;
+    /* right: 0; */
     margin: auto;
 
-    width: 20rem;
-    height: 16rem;
+    width: 32rem;
+    height: 24rem;
 
     background-color: #f9f9f9;
     border-radius: 5px;
@@ -38,6 +38,8 @@
     justify-content: center;
     /* 水平居中 */
     text-align: center;
+
+    cursor: move;
 }
 
 #prompt-report-bad-data{
@@ -55,8 +57,8 @@
     color: #717f86;
     caret-color: #a1c0b2;
 
-    width: 16rem;
-    height: 10rem;
+    width: 24rem;
+    height: 16rem;
     margin: 0.5rem 0;
 
     /* 禁止拉伸 */
