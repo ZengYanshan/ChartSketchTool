@@ -38,7 +38,8 @@ $(document).on("vmousemove", "body", function (e) {
 // })
 
 // -------------------------global-------------------------
-const maxId = insight_ChartToText.length;
+const insight_dataset = insight_ChartToText;
+const maxId = insight_dataset.length;
 var currentId = 1;
 var currentInsightObj;
 const maxBrushWidth = 36;
@@ -54,7 +55,7 @@ function datasetUrl() {
     // var url = `./src/assets/dataset/vega_lite/${currentInsightObj.key}_vega_lite.json`;
 
     // {"width": 200, "height": 150, "data": {"values": [{"category": "AssocProf", "value": 2}, {"category": "AsstProf", "value": 18}, {"category": "Professor", "value": 14}]}, "mark": {"type": "arc", "innerRadius": 5, "stroke": "#fff"}, "encoding": {"theta": {"field": "value", "type": "quantitative", "stack": true}, "color": {"field": "category", "type": "nominal", "scale": {"domain": ["AssocProf", "AsstProf", "Professor"]}, "legend": {"orient": "bottom", "title": null, "symbolType": "square", "direction": "horizontal", "values": ["AsstProf", "Professor"]}}, "order": {"field": "value", "type": "quantitative", "sort": "descending"}, "radius": {"field": "value", "scale": {"type": "linear", "zero": true, "rangeMin": 20}}, "tooltip": [{"field": "category", "type": "nominal"}, {"field": "value", "type": "quantitative"}]}, "config": {"legend": {"layout": {"anchor": "middle", "padding": 10}}}}
-    var url = insight_ChartToText[currentId - 1].vega_lite;
+    var url = insight_dataset[currentId - 1].vega_lite;
 
     // chart to text 1.png
     // var url = `./src/assets/dataset/chart-to-text/imgs/${currentInsightObj.key}.png`;
@@ -105,20 +106,27 @@ function updateBadData() {
     console.log("updateBadData()");
     // 查找文件以判断是否已标为不良数据；换页触发更新
     readCorrectDescription(correctDescriptionFileName(),
-        function (correctDescription) {
+        function (correctJson) {
+            // 解析 JSON
+            let correctInsightObj = JSON.parse(correctJson);
+
             // 更新页面提示文本
             $("#report-bad-data-link").text("This has been marked as bad data. Click here to unmark it.");
             // insight 文本颜色变淡，显示删除线
-            $("#insight-text-type").css("opacity", "0.8");
             $("#insight-text-description").css("opacity", "0.8");
-            $("#insight-text-type").css("text-decoration-line", "line-through");
             $("#insight-text-description").css("text-decoration-line", "line-through");
             // 显示修改信息
-            $("#insight-text-correct-description").text(correctDescription);
+            if (correctInsightObj.type != currentInsightObj.type) {
+                $("#insight-text-type").css("opacity", "0.8");
+                $("#insight-text-type").css("text-decoration-line", "line-through");
+                $("#insight-text-correct-type").text(correctInsightObj.type);
+            }
+            $("#insight-text-correct-description").text(correctInsightObj.description);
 
             // 更新报错面板提示文本
             $("#prompt-report-bad-data").text("Marked as bad data. Change it?");
-            $("#correct-description").text(correctDescription);
+            $("#select-type").val(correctInsightObj.type);
+            $("#correct-description").val(correctInsightObj.description);
         },
         function () {
             // 更新页面提示文本
@@ -129,11 +137,13 @@ function updateBadData() {
             $("#insight-text-type").css("text-decoration-line", "none");
             $("#insight-text-description").css("text-decoration-line", "none");
             // 不显示修改信息
+            $("#insight-text-correct-type").text("");
             $("#insight-text-correct-description").text("");
 
             // 更新报错面板提示文本
             $("#prompt-report-bad-data").text("Mark it as bad data?");
-            $("#correct-description").text("");
+            $("#select-type").val(currentInsightObj.type);
+            $("#correct-description").val("");
         }
     );
 }
@@ -353,13 +363,18 @@ $(function () {
 
         // 更新currentId, currentInsightObj
         currentId = id;
-        currentInsightObj = insight_ChartToText[currentId - 1]; // 数组下标从 0 开始
+        currentInsightObj = insight_dataset[currentId - 1]; // 数组下标从 0 开始
 
         // 更新页面文本
         $("#current-id").val(currentId);
         $("#insight-text-id").text(currentInsightObj.key);
+        // 若 currentInsightObj 没有type，则赋空值
+        if (!currentInsightObj.type) {
+            currentInsightObj.type = "";
+        }
         $("#insight-text-type").text(currentInsightObj.type);
         $("#insight-text-description").text(currentInsightObj.description);
+
         updateBadData();
 
         // 读入下一图

@@ -56,14 +56,22 @@
                                     <td id="insight-text-type">type</td>
                                 </tr>
                                 <tr>
+                                    <th></th>
+                                    <th>
+                                        </td>
+                                    <td class="insight-text-correct" id="insight-text-correct-type"></td>
+                                </tr>
+                                <tr>
                                     <th>Description</th>
                                     <th>:</td>
                                     <td id="insight-text-description">description</td>
                                 </tr>
                                 <tr>
                                     <th></th>
-                                    <th></td>
-                                    <td id="insight-text-correct-description">correct description</td>
+                                    <th>
+                                        </td>
+                                    <td class="insight-text-correct" id="insight-text-correct-description"></td>
+                                </tr>
                             </tbody>
                         </table>
                         <!-- <div>
@@ -71,7 +79,10 @@
                             <div>Description: <span id="insight-text-description"></span></div>
                         </div> -->
 
-                        <div class="prompt">Please sketch on the chart, and save it after sketching. <a id="report-bad-data-link" href="javascript:void(0)" onclick="showReportBadDataContainer();">If there is something wrong, click here to mark it as bad data and correct it.</a></div>
+                        <div class="prompt">Please sketch on the chart, and save it after sketching. <a
+                                id="report-bad-data-link" href="javascript:void(0)"
+                                onclick="showReportBadDataContainer();">If there is something wrong, click here to mark
+                                it as bad data and correct it.</a></div>
 
 
                     </div>
@@ -171,7 +182,18 @@
         <div class="container-fluid" id="container-report-bad-data">
             <div class="box" id="report-bad-data-box">
                 <div id="prompt-report-bad-data">Mark it as bad data?</div>
-                <textarea type="text" id="correct-description" placeholder="Enter correct insight description. If left blank, this data will not be marked as bad data."></textarea>
+
+                <div class="wrap-select">
+                    <label for="select-type">Correct Type</label>
+                    &nbsp;&nbsp;
+                    <select id="select-type">
+                        <option value=""></option>
+                    </select>
+                </div>
+
+
+                <textarea type="text" id="correct-description"
+                    placeholder="Enter correct insight description. If left blank, this data will not be marked as bad data."></textarea>
                 <div class="wrap-area" id="wrap-report-bad-data-button">
                     <button id="cancel">
                         <img class="svg-icon" src="src/assets/img/cancel.svg">
@@ -203,6 +225,8 @@
     <!-- <script type="text/javascript" src="src/js/insight_nvBench_vega_lite.js"></script> -->
     <!-- <script type="text/javascript" src="src/js/insight_ChartToText.js"></script> -->
     <script type="text/javascript" src="src/js/insight_ChartToText_vega_lite.js"></script>
+    <script type="text/javascript" src="src/js/insight_ChartToText_TwoColumn_vega_lite.js"></script>
+    <script type="text/javascript" src="src/js/insight-type.js"></script>
     <!-- dev -->
     <script type="text/javascript" src="src/js/dialogs.js"></script>
     <script type="text/javascript" src="src/js/drag-element.js"></script>

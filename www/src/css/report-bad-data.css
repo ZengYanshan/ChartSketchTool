@@ -1,3 +1,7 @@
+.insight-text-correct {
+    color: #867171;
+}
+
 #report-bad-data-link {
     color: #ff7a7a;
     /* text-decoration: underline; */
@@ -43,8 +47,18 @@
 }
 
 #prompt-report-bad-data{
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     font-weight: bold;
+}
+
+.wrap-select {
+    display: flex;
+
+    margin: 0.5rem 0 0;
+}
+
+#select-type {
+    width: 18rem;
 }
 
 #correct-description {
@@ -58,7 +72,7 @@
     caret-color: #a1c0b2;
 
     width: 24rem;
-    height: 16rem;
+    height: 14rem;
     margin: 0.5rem 0;
 
     /* 禁止拉伸 */

@@ -10,7 +10,9 @@ function dragElement(elem) {
     function dragMouseDown(e) {
         e = e || window.event;
 
-        if (e.target.tagName.toLowerCase() === "textarea" || e.target.tagName.toLowerCase() === "input" || e.target.tagName.toLowerCase() === "button" || e.target.classList.contains("svg-icon")) {
+        if (e.target.tagName.toLowerCase() === "textarea" || e.target.tagName.toLowerCase() === "input"
+             || e.target.tagName.toLowerCase() === "button" || e.target.classList.contains("svg-icon")
+             || e.target.tagName.toLowerCase() === "label" || e.target.tagName.toLowerCase() === "select" || e.target.tagName.toLowerCase() === "option") {
             return;
         }
 
@@ -25,7 +27,9 @@ function dragElement(elem) {
 
     function dragTouchStart(e) {
         e = e || window.event;
-        if (e.target.tagName.toLowerCase() === "textarea" || e.target.tagName.toLowerCase() === "input" || e.target.tagName.toLowerCase() === "button" || e.target.classList.contains("svg-icon")) {
+        if (e.target.tagName.toLowerCase() === "textarea" || e.target.tagName.toLowerCase() === "input"
+             || e.target.tagName.toLowerCase() === "button" || e.target.classList.contains("svg-icon")
+             || e.target.tagName.toLowerCase() === "label" || e.target.tagName.toLowerCase() === "select" || e.target.tagName.toLowerCase() === "option") {
             return;
         }
         e.preventDefault();
