@@ -1,6 +1,7 @@
 const CORRECT_INSIGHT_BUTTONS = ["#button-save-correct-insight", "#button-import-correct-insight", "#button-cancel-correct-insight"];
 const CORRECT_INSIGHT_TEXT_INPUTS = ["#select-type", "#correct-description"];
 const CORRECT_INSIGHT_INTERFACE_ELEMENTS = CORRECT_INSIGHT_BUTTONS.concat(CORRECT_INSIGHT_TEXT_INPUTS);
+const CORRECT_INSIGHT_DISPLAY_ELEMENTS = ["#button-edit-insight", "#insight-text-correct-type", "#insight-text-correct-description"];
 
 // 为按钮绑定方法
 $("#button-edit-insight").click(showCorrectInsightInterface);
@@ -16,7 +17,9 @@ function hideCorrectInsightInterface() {
         $(element).css("display", "none");
     });
 
-    $("#button-edit-insight").css("display", "inline");
+    CORRECT_INSIGHT_DISPLAY_ELEMENTS.forEach((element) => {
+        $(element).css("display", "inline");
+    });
 }
 
 function showCorrectInsightInterface() {
@@ -24,13 +27,16 @@ function showCorrectInsightInterface() {
         $(element).css("display", "inline");
     });
 
-    $("#button-edit-insight").css("display", "none");
+    CORRECT_INSIGHT_DISPLAY_ELEMENTS.forEach((element) => {
+        $(element).css("display", "none");
+    });
 }
 
 function saveCorrectInsight() {
     // 获取当前输入
     let correctType = $("#select-type").val();
     let correctDescription = $("#correct-description").val();
+    // alert("correctType: " + correctType + "\ncorrectDescription: " + correctDescription);
 
     if ((correctType == "" || correctType == currentInsightObj.type)
          && (correctDescription === "" || correctDescription === currentInsightObj.description)) {
@@ -73,8 +79,6 @@ function initTypeSelect() {
     // 初始化类型选择框，插入所有类型
     insightTypes.forEach(type => {
         const option = document.createElement("option");
-        option.value = type;
-        option.textContent = type;
-        $("#select-type").appendChild(option);
+        $("#select-type").append(new Option(type, type));
     });
 }
