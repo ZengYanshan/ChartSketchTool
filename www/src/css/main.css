@@ -292,6 +292,14 @@ button {
     transition: all .3s;
 }
 
+.button-cancel {
+    background-color: #bebebe;
+}
+
+.button-confirm {
+    background-color: #ff7a7a;
+}
+
 th {
     text-align: left;
     vertical-align: top;
@@ -315,11 +323,6 @@ td {
     border: 2px solid #a1c0b2;
     vertical-align: bottom;
 }
-
-#save {
-    background-color: #ff7a7a;
-}
-
 
 .picker {
     /* 初始隐藏 */

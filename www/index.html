@@ -10,7 +10,7 @@
     <title>Chart Sketch Tool</title>
     <link rel="shortcut icon" href="src/assets/img/favicon.png">
     <link rel="stylesheet" type="text/css" href="src/css/user.css">
-    <link rel="stylesheet" type="text/css" href="src/css/report-bad-data.css">
+    <link rel="stylesheet" type="text/css" href="src/css/correct-insight.css">
     <link rel="stylesheet" type="text/css" href="src/css/main.css">
 </head>
 
@@ -43,34 +43,55 @@
 
                     <!-- 描述 -->
                     <div class="wrap-area wrap-insight-text">
+                        <!-- 编辑按钮 -->
+                        <div id="wrap-correct-insight-button">
+                            <button class="button-cancel" id="button-cancel-correct-insight">
+                                <img class="svg-icon" src="src/assets/img/cancel.svg">
+                            </button>
+                            <button id="button-import-correct-insight">
+                                <img class="svg-icon" src="src/assets/img/import.svg">
+                            </button>
+                            <button class="button-confirm" id="button-save-correct-insight">
+                                <img class="svg-icon" src="src/assets/img/save.svg">
+                            </button>
+                            <button id="button-edit-insight">
+                                <img class="svg-icon" src="src/assets/img/edit.svg">
+                            </button>
+                        </div>
+                        
+
                         <table>
                             <tbody>
                                 <tr>
                                     <th>Data ID</th>
-                                    <th>:</td>
+                                    <th>:</th>
                                     <td id="insight-text-id">id</td>
                                 </tr>
                                 <tr>
                                     <th>Type</th>
-                                    <th>:</td>
+                                    <th>:</th>
                                     <td id="insight-text-type">type</td>
                                 </tr>
                                 <tr>
                                     <th></th>
-                                    <th>
-                                        </td>
-                                    <td class="insight-text-correct" id="insight-text-correct-type"></td>
+                                    <th></th>
+                                    <td class="insight-text-correct" id="insight-text-correct-type">
+                                        <select id="select-type">
+                                            <option value=""></option>
+                                        </select>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <th>Description</th>
-                                    <th>:</td>
+                                    <th>:</th>
                                     <td id="insight-text-description">description</td>
                                 </tr>
                                 <tr>
                                     <th></th>
-                                    <th>
-                                        </td>
-                                    <td class="insight-text-correct" id="insight-text-correct-description"></td>
+                                    <th></th>
+                                    <td class="insight-text-correct" id="insight-text-correct-description">
+                                        <textarea type="text" id="correct-description"                     placeholder="Enter correct insight description here. If left blank, insight description will not be changed."></textarea>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -79,10 +100,8 @@
                             <div>Description: <span id="insight-text-description"></span></div>
                         </div> -->
 
-                        <div class="prompt">Please sketch on the chart, and save it after sketching. <a
-                                id="report-bad-data-link" href="javascript:void(0)"
-                                onclick="showReportBadDataContainer();">If there is something wrong, click here to mark
-                                it as bad data and correct it.</a></div>
+                        <div class="prompt">Please sketch on the chart, and save it after sketching. <span
+                                id="prompt-correct-insight">If there is something wrong, click edit button to correct it.</span></div>
 
 
                     </div>
@@ -124,7 +143,7 @@
                         </button>
 
                         <!-- 保存按钮 -->
-                        <button id="save">
+                        <button class="button-confirm" id="save">
                             <img class="svg-icon" src="src/assets/img/save.svg">
                         </button>
 
@@ -178,7 +197,7 @@
 
         </div>
 
-        <!-- 报错面板 -->
+        <!-- 报错面板 
         <div class="container-fluid" id="container-report-bad-data">
             <div class="box" id="report-bad-data-box">
                 <div id="prompt-report-bad-data">Mark it as bad data?</div>
@@ -205,6 +224,7 @@
             </div>
 
         </div>
+        -->
 
         <!-- 用于 vega-lite 转 vega -->
         <div id="view" style="display: none;"></div>
@@ -234,7 +254,8 @@
     <script type="text/javascript" src="src/js/user.js"></script>
     <script type="text/javascript" src="src/js/file.js"></script>
     <script type="text/javascript" src="src/js/main.js"></script>
-    <script type="text/javascript" src="src/js/report-bad-data.js"></script>
+    <script type="text/javascript" src="src/js/correct-insight.js"></script>
+    <!-- <script type="text/javascript" src="src/js/report-bad-data.js"></script> -->
     <!-- test -->
     <script type="text/javascript" src="src/js/test.js"></script>
 </body>

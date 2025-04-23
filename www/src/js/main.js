@@ -68,9 +68,9 @@ function canvasFileName() {
     return fileName;
 }
 
-function correctDescriptionFileName() {
-    // 4_1_correct_description.txt
-    var filename = `${currentId}_${currentInsightObj.key}_correct_description.txt`;
+function correctInsightFileName() {
+    // 4_1_correct_insight.txt
+    var filename = `${currentId}_${currentInsightObj.key}_correct_insight.txt`;
     return filename;
 }
 
@@ -102,46 +102,46 @@ function vegaLiteSpecToSvg(vlSpec, successCallback) {
     });
 }
 
-function updateBadData() {
-    console.log("updateBadData()");
+function updateCorrectInsight() {
     // 查找文件以判断是否已标为不良数据；换页触发更新
-    readCorrectDescription(correctDescriptionFileName(),
-        function (correctJson) {
+    readCorrectInsight(correctInsightFileName(),
+        function (correctInsightJson) {
             // 解析 JSON
-            let correctInsightObj = JSON.parse(correctJson);
+            let correctInsightObj = JSON.parse(correctInsightJson);
 
             // 更新页面提示文本
-            $("#report-bad-data-link").text("This has been marked as bad data. Click here to unmark it.");
-            // insight 文本颜色变淡，显示删除线
+            $("#prompt-correct-insight").text("Insight text has been corrected. Click edit button to change it.");
+            // insight 文本颜色变淡，显示删除线，显示修改信息
+            // 修改 description
             $("#insight-text-description").css("opacity", "0.8");
             $("#insight-text-description").css("text-decoration-line", "line-through");
-            // 显示修改信息
+            $("#insight-text-correct-description").text(correctInsightObj.description);
+            // 修改 type
             if (correctInsightObj.type != currentInsightObj.type) {
                 $("#insight-text-type").css("opacity", "0.8");
                 $("#insight-text-type").css("text-decoration-line", "line-through");
                 $("#insight-text-correct-type").text(correctInsightObj.type);
             }
-            $("#insight-text-correct-description").text(correctInsightObj.description);
 
-            // 更新报错面板提示文本
-            $("#prompt-report-bad-data").text("Marked as bad data. Change it?");
+            // 更新纠正编辑
+            // $("#prompt-report-bad-data").text("Marked as bad data. Change it?");
             $("#select-type").val(correctInsightObj.type);
             $("#correct-description").val(correctInsightObj.description);
         },
         function () {
             // 更新页面提示文本
-            $("#report-bad-data-link").text("If there is something wrong, click here to mark it as bad data and correct it.");
-            // insight 文本颜色恢复，不显示删除线
+            $("#prompt-correct-insight").text("If there is something wrong, click edit button to correct it.");
+            // 修改 type
             $("#insight-text-type").css("opacity", "1");
-            $("#insight-text-description").css("opacity", "1");
             $("#insight-text-type").css("text-decoration-line", "none");
-            $("#insight-text-description").css("text-decoration-line", "none");
-            // 不显示修改信息
             $("#insight-text-correct-type").text("");
+            // 修改 description
+            $("#insight-text-description").css("opacity", "1");
+            $("#insight-text-description").css("text-decoration-line", "none");
             $("#insight-text-correct-description").text("");
 
-            // 更新报错面板提示文本
-            $("#prompt-report-bad-data").text("Mark it as bad data?");
+            // 更新纠正编辑
+            // $("#prompt-report-bad-data").text("Mark it as bad data?");
             $("#select-type").val(currentInsightObj.type);
             $("#correct-description").val("");
         }
@@ -375,7 +375,10 @@ $(function () {
         $("#insight-text-type").text(currentInsightObj.type);
         $("#insight-text-description").text(currentInsightObj.description);
 
-        updateBadData();
+        // 更新纠正
+        $("#select-type").val(currentInsightObj.type);
+        $("#correct-description").val("");
+        updateCorrectInsight();
 
         // 读入下一图
         loadCanvasImage();
@@ -481,7 +484,7 @@ $(function () {
     //     return false;
     // });
 
-    // updateBadData();
+    // updateCorrectInsight();
 });
 
 // 关闭网页前确认

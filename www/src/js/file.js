@@ -223,7 +223,7 @@ function createUserDir(dirName) {
 }
 
 // 读取修正后的insight description
-function readCorrectDescription(fileName, successCallback, errorCallback) {
+function readCorrectInsight(fileName, successCallback, errorCallback) {
     // 路径准备
     var filePath = path("files-external", `${currentUsername}/${fileName}`);
 

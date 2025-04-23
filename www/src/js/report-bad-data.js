@@ -19,7 +19,7 @@ $(function () {
 function showReportBadDataContainer() {
     // 显示报错面板
     reportBadDataContainer.style.display = "block";
-    // 获取已有报错信息在 main.js updateBadData() 中完成
+    // 获取已有报错信息在 main.js updateCorrectInsight() 中完成
 }
 
 function hideReportBadDataContainer() {
@@ -37,9 +37,9 @@ function changeBadDataMark() {
     if ((correctType == "" || correctType == currentInsightObj.type)
          && (correctDescription === "" || correctDescription === currentInsightObj.description)) {
         // 若 type 与原本相同且 correctDescription 为空，删除本地文件
-        deleteCorrectDescription(correctDescriptionFileName(), function () {
+        deleteCorrectDescription(correctInsightFileName(), function () {
             // 更新页面内容
-            updateBadData();
+            updateCorrectInsight();
 
             // 关闭报错面板
             hideReportBadDataContainer();
@@ -56,9 +56,9 @@ function changeBadDataMark() {
         let correctJson = JSON.stringify(correctInsightObj);
 
         // 写入文件
-        writeCorrectDescription(correctDescriptionFileName(), correctJson, function () {
+        writeCorrectDescription(correctInsightFileName(), correctJson, function () {
             // 更新页面内容
-            updateBadData();
+            updateCorrectInsight();
 
             // 关闭报错面板
             hideReportBadDataContainer();
