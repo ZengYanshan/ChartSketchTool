@@ -165,7 +165,7 @@ function readCanvasImage(fileName, successCallback, errorCallback) {
             fileEntry.file(function (file) {
                 var reader = new FileReader();
                 reader.onloadend = function () {
-                    toast("读取文件完成：" + this.result);
+                    // toast("读取文件完成：" + this.result);
                     successCallback(this.result);
                 };
                 // file.type == 'image/svg+xml')
@@ -235,7 +235,7 @@ function readCorrectInsight(fileName, successCallback, errorCallback) {
             fileEntry.file(function (file) {
                 var reader = new FileReader();
                 reader.onloadend = function () {
-                    toast("读取文件完成：" + this.result);
+                    // toast("读取文件完成：" + this.result);
                     successCallback(this.result);
                 };
                 reader.readAsText(file);
@@ -304,7 +304,7 @@ function deleteCorrectDescription(fileName, successCallback) {
         // 从沙箱删除
         fs.root.getFile(privateFilePath, { create: false }, function (fileEntry) {
             fileEntry.remove(function () {
-                toast("unmarked");
+                // toast("unmarked");
                 successCallback();
             }, onErrorRemoveFile);
         }, onErrorGetFile);
