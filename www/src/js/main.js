@@ -340,19 +340,19 @@ $(function () {
     }
     canvas.on("object:modified", updateCanvasState);
     canvas.on("object:added", updateCanvasState);
-    // undo 按钮
-    $("#undo").click(undoCanvas);
-    // redo 按钮
-    $("#redo").click(redoCanvas);
-    // clear 按钮
-    $("#clear").click(clearCanvas);
-    // save 按钮
-    $("#save").click(function () {
+    // button-undo-canva 按钮
+    $("#button-undo-canva").click(undoCanvas);
+    // button-redo-canva 按钮
+    $("#button-redo-canva").click(redoCanvas);
+    // button-clear-canva 按钮
+    $("#button-clear-canva").click(clearCanvas);
+    // button-save-canva 按钮
+    $("#button-save-canva").click(function () {
         saveCanvas();
 
-        // $("#save").attr("href", canvas.toDataURL());
+        // $("#button-save-canva").attr("href", canvas.toDataURL());
         // console.log(canvas.toDataURL());
-        // $("#save").attr("download", "canvas");
+        // $("#button-save-canva").attr("download", "canvas");
     });
 
     // -------------------------Insight-------------------------
@@ -440,7 +440,7 @@ $(function () {
         var brushColor = color.hexString;
         setCanvasBrushColor(brushColor);
         $("#brush").attr("fill", brushColor);
-        // $("#pick-brush").css("border-color", brushColor); // 改变#pick-brush border 颜色
+        // $("#button-pick-brush").css("border-color", brushColor); // 改变#button-pick-brush border 颜色
         // 改变全局粗细
         const base = 0.03;
         var brushWidth = (base + color.alpha * (1.00 - base)) * maxBrushWidth;
@@ -448,7 +448,7 @@ $(function () {
         $("#brush").attr("r", brushWidth / 2);
     });
     // 点击按钮显示/隐藏选择器
-    $("#pick-brush").click(function () {
+    $("#button-pick-brush").click(function () {
         $("#color-picker").toggle();
     });
 
