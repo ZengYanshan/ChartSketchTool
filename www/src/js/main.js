@@ -113,14 +113,24 @@ function updateCorrectInsight() {
             $("#prompt-correct-insight").text("Insight text has been corrected. Click edit button to change it.");
             // insight 文本颜色变淡，显示删除线，显示修改信息
             // 修改 description
-            $("#insight-text-description").css("opacity", "0.8");
-            $("#insight-text-description").css("text-decoration-line", "line-through");
-            $("#insight-text-correct-description").text(correctInsightObj.description);
+            if (correctInsightObj.description != "" && correctInsightObj.description != currentInsightObj.description) {
+                $("#insight-text-description").css("opacity", "0.8");
+                $("#insight-text-description").css("text-decoration-line", "line-through");
+                $("#insight-text-correct-description").text(correctInsightObj.description);
+            } else {
+                $("#insight-text-description").css("opacity", "1");
+                $("#insight-text-description").css("text-decoration-line", "none");
+                $("#insight-text-correct-description").text("");
+            }
             // 修改 type
-            if (correctInsightObj.type != currentInsightObj.type) {
+            if (correctInsightObj.type != "" && correctInsightObj.type != currentInsightObj.type) {
                 $("#insight-text-type").css("opacity", "0.8");
                 $("#insight-text-type").css("text-decoration-line", "line-through");
                 $("#insight-text-correct-type").text(correctInsightObj.type);
+            } else {
+                $("#insight-text-type").css("opacity", "1");
+                $("#insight-text-type").css("text-decoration-line", "none");
+                $("#insight-text-correct-type").text("");
             }
 
             // 更新纠正编辑
@@ -131,15 +141,15 @@ function updateCorrectInsight() {
         function () {
             // 更新页面提示文本
             $("#prompt-correct-insight").text("If there is something wrong, click edit button to correct it.");
-            // 修改 type
-            $("#insight-text-type").css("opacity", "1");
-            $("#insight-text-type").css("text-decoration-line", "none");
-            $("#insight-text-correct-type").text("");
             // 修改 description
             $("#insight-text-description").css("opacity", "1");
             $("#insight-text-description").css("text-decoration-line", "none");
             $("#insight-text-correct-description").text("");
-
+            // 修改 type
+            $("#insight-text-type").css("opacity", "1");
+            $("#insight-text-type").css("text-decoration-line", "none");
+            $("#insight-text-correct-type").text("");
+            
             // 更新纠正编辑
             // $("#prompt-report-bad-data").text("Mark it as bad data?");
             $("#select-type").val(currentInsightObj.type);
@@ -340,26 +350,28 @@ $(function () {
     }
     canvas.on("object:modified", updateCanvasState);
     canvas.on("object:added", updateCanvasState);
-    // button-undo-canva 按钮
-    $("#button-undo-canva").click(undoCanvas);
-    // button-redo-canva 按钮
-    $("#button-redo-canva").click(redoCanvas);
-    // button-clear-canva 按钮
-    $("#button-clear-canva").click(clearCanvas);
-    // button-save-canva 按钮
-    $("#button-save-canva").click(function () {
+    // button-undo-canvas 按钮
+    $("#button-undo-canvas").click(undoCanvas);
+    // button-redo-canvas 按钮
+    $("#button-redo-canvas").click(redoCanvas);
+    // button-clear-canvas 按钮
+    $("#button-clear-canvas").click(clearCanvas);
+    // button-save-canvas 按钮
+    $("#button-save-canvas").click(function () {
         saveCanvas();
 
-        // $("#button-save-canva").attr("href", canvas.toDataURL());
+        // $("#button-save-canvas").attr("href", canvas.toDataURL());
         // console.log(canvas.toDataURL());
-        // $("#button-save-canva").attr("download", "canvas");
+        // $("#button-save-canvas").attr("download", "canvas");
     });
 
     // -------------------------Insight-------------------------
 
     function updateInsight(id) {
-        // 保存上一图
-        // saveCanvas();
+        // 若开启了自动保存模式，保存上一图
+        if (flagAutoSaveCanvas) {
+            saveCanvas();
+        }
 
         // 更新currentId, currentInsightObj
         currentId = id;
@@ -387,8 +399,6 @@ $(function () {
         // console.log(typeof currentId, currentId); // string
         currentId = parseInt(currentId);
         if (currentId > 1) {
-            // 保存当前图
-            // saveCanvas();
             // 更新上一图
             updateInsight(currentId - 1);
         }
@@ -397,8 +407,6 @@ $(function () {
         // console.log(typeof currentId, currentId); // string
         currentId = parseInt(currentId);
         if (currentId < maxId) {
-            // 保存当前图
-            // saveCanvas();
             // 更新下一图
             updateInsight(currentId + 1);
         }
@@ -486,12 +494,3 @@ $(function () {
 
     // updateCorrectInsight();
 });
-
-// 关闭网页前确认
-// window.onbeforeunload = function (e) {
-//     e = e || window.event;
-//     if (e) {
-//         e.returnValue = 'Sure?';
-//     }
-//     return 'Sure?';
-// };

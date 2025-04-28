@@ -2,8 +2,6 @@
 @import url('normalize.css');
 @import url('wenk.min.css');
 @import url('lity.min.css');
-@import url('jquery.ezdz.min.css');
-@import url('jquery.minicolors-2.1.2.css');
 
 html {
     -webkit-box-sizing: border-box;
@@ -131,6 +129,13 @@ html {
     padding: 0;
     margin: 0;
     outline: none;
+}
+
+/* 去除移动端蓝色点击效果 */
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 body {
@@ -289,12 +294,17 @@ button {
     -o-transition: all .3s;
     transition: all .3s;
 }
+
 button:active {
     transform: scale(0.95) translateY(2px);
 }
 
 .button-cancel {
     background-color: #bebebe;
+}
+
+.button-normal {
+    background-color: #a1c0b2;
 }
 
 .button-confirm {
@@ -309,11 +319,40 @@ th {
 td {
     text-align: justify;
     vertical-align: top;
+    width: 100%;
 }
 
 .wrap-canvas-buttons {
     display: flex;
     gap: 2px;
+}
+
+#button-auto-save-canvas {
+    width: 40px;
+    height: 20px;
+}
+
+#slider {
+    cursor: pointer;
+
+    transition: transform 0.3s ease, fill 0.3s ease;
+    fill: #f9f9f9;
+}
+#slider.slider-right {
+    transform: translateX(20px); /* 滑动距离 */
+    fill: #ff7a7a;
+}
+
+#slider-text {
+    user-select: none;
+    -webkit-user-select: none; /* 兼容 Safari */
+    -moz-user-select: none; /* 兼容 Firefox */
+    -ms-user-select: none; /* 兼容旧版 IE */
+
+    transition: transform 0.3s ease;
+}
+#slider-text.slider-right {
+    transform: translateX(20px); /* 滑动距离 */
 }
 
 #button-pick-brush {

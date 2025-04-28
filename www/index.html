@@ -9,6 +9,7 @@
 
     <title>Chart Sketch Tool</title>
     <link rel="shortcut icon" href="src/assets/img/favicon.png">
+    <!-- <link rel="stylesheet" type="text/css" href="src/css/shake-animate.css"> -->
     <link rel="stylesheet" type="text/css" href="src/css/user.css">
     <link rel="stylesheet" type="text/css" href="src/css/correct-insight.css">
     <link rel="stylesheet" type="text/css" href="src/css/main.css">
@@ -58,7 +59,7 @@
                                 <img class="svg-icon" src="src/assets/img/edit.svg">
                             </button>
                         </div>
-                        
+
 
                         <table>
                             <tbody>
@@ -92,7 +93,8 @@
                                     <th></th>
                                     <td class="insight-text-correct">
                                         <div id="insight-text-correct-description"></div>
-                                        <textarea type="text" id="correct-description"                     placeholder="Enter correct insight description here. If left blank, insight description will not be changed."></textarea>
+                                        <textarea type="text" id="correct-description"
+                                            placeholder="Enter correct insight description here. If left blank, insight description will not be changed."></textarea>
                                     </td>
                                 </tr>
                             </tbody>
@@ -103,7 +105,8 @@
                         </div> -->
 
                         <div class="prompt">Please sketch on the chart, and save it after sketching. <span
-                                id="prompt-correct-insight">If there is anything wrong, press edit button to correct it.</span></div>
+                                id="prompt-correct-insight">If there is anything wrong, press edit button to correct
+                                it.</span></div>
 
 
                     </div>
@@ -131,23 +134,40 @@
                             </svg>
                         </button>
                         <!-- 撤销按钮 -->
-                        <button id="button-undo-canva">
+                        <button id="button-undo-canvas">
                             <img class="svg-icon" src="src/assets/img/undo.svg">
                         </button>
                         <!-- 恢复按钮 -->
-                        <button id="button-redo-canva">
+                        <button id="button-redo-canvas">
                             <img class="svg-icon" src="src/assets/img/redo.svg">
                         </button>
 
                         <!-- 清空按钮 -->
-                        <button id="button-clear-canva">
+                        <button id="button-clear-canvas">
                             <img class="svg-icon" src="src/assets/img/clear.svg">
                         </button>
 
                         <!-- 保存按钮 -->
-                        <button class="button-confirm" id="button-save-canva">
+                        <button class="button-confirm" id="button-save-canvas">
                             <img class="svg-icon" src="src/assets/img/confirm.svg">
                         </button>
+                        <!-- 自动保存模式切换滑块 -->
+                        <div id="button-auto-save-canvas">
+                            <svg>
+                                <rect x="0" y="0" width="40" height="20" rx="5" fill="#eee"></rect>
+                                <rect id="slider" x="2" y="2" width="16" height="16" rx="5"></rect>
+                                <!-- 中心文字 -->
+                                <text id="slider-text" x="10" y="14" font-size="10" text-anchor="middle"
+                                    fill="#eee">A</text>
+                            </svg>
+                        </div>
+
+
+                        <!-- 自动保存模式切换按钮 
+                        <button class="button-cancel" id="button-auto-save-canvas">
+                            <img class="svg-icon" src="src/assets/img/confirm-auto.svg">
+                        </button>-->
+
 
                         <!-- 导出按钮 -->
                         <!-- <button id="export">
@@ -155,7 +175,7 @@
                         </button> -->
 
                         <!-- 测试按钮 
-                        <button id="test">
+                        <button id="test" class="shake">
                             <img class="svg-icon">
                         </button>-->
 
@@ -246,15 +266,15 @@
     <!-- <script type="text/javascript" src="src/js/insight_nvBench.js"></script> -->
     <!-- <script type="text/javascript" src="src/js/insight_nvBench_vega_lite.js"></script> -->
     <!-- <script type="text/javascript" src="src/js/insight_ChartToText.js"></script> -->
-    <script type="text/javascript" src="src/js/insight_ChartToText_vega_lite.js"></script>
-    <script type="text/javascript" src="src/js/insight_ChartToText_TwoColumn_vega_lite.js"></script>
+    <script type="text/javascript" src="src/js/insight_ChartToText_Sum.js"></script>
     <script type="text/javascript" src="src/js/insight-type.js"></script>
     <!-- dev -->
     <script type="text/javascript" src="src/js/dialogs.js"></script>
-    <script type="text/javascript" src="src/js/drag-element.js"></script>
-    <script type="text/javascript" src="src/js/vis.js"></script>
+    <!-- <script type="text/javascript" src="src/js/drag-element.js"></script> -->
+    <!-- <script type="text/javascript" src="src/js/vis.js"></script> -->
     <script type="text/javascript" src="src/js/user.js"></script>
     <script type="text/javascript" src="src/js/file.js"></script>
+    <script type="text/javascript" src="src/js/auto-save.js"></script>
     <script type="text/javascript" src="src/js/main.js"></script>
     <script type="text/javascript" src="src/js/correct-insight.js"></script>
     <!-- <script type="text/javascript" src="src/js/report-bad-data.js"></script> -->
