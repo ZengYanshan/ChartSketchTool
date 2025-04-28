@@ -266,7 +266,7 @@ table {
 } */
 
 #c {
-    outline: 5px dashed #a1adb3;
+    outline: 5px dashed #ddd;
 }
 
 /* 隐藏上下箭头 */
@@ -348,11 +348,15 @@ td {
     -webkit-user-select: none; /* 兼容 Safari */
     -moz-user-select: none; /* 兼容 Firefox */
     -ms-user-select: none; /* 兼容旧版 IE */
+    cursor: pointer;
 
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, fill 0.3s ease;
+    fill: #ddd;
+
 }
 #slider-text.slider-right {
     transform: translateX(20px); /* 滑动距离 */
+    fill: #fff;
 }
 
 #button-pick-brush {
