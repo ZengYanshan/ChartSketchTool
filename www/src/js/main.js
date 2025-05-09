@@ -182,7 +182,7 @@ $(function () {
     var isUpdateOperation = true; // 防止撤销和恢复被存入画布状态栈
     function updateCanvasState() {
         if (isUpdateOperation) {
-            const canvasAsJson = JSON.stringify(canvas.toJSON());
+            let canvasAsJson = JSON.stringify(canvas.toJSON());
             canvasState.splice(currentStateIndex + 1);
             canvasState.push(canvasAsJson);
             currentStateIndex = canvasState.length - 1;
@@ -193,8 +193,23 @@ $(function () {
     }
     function loadCanvasState(stateIndex) {
         isUpdateOperation = false;
-        canvas.loadFromJSON(canvasState[stateIndex], () => {
+        canvas.loadFromJSON(JSON.parse(canvasState[stateIndex]), () => {
             canvas.renderAll();
+            
+            // DEBUG
+            try {
+                readCanvasImage(
+                    canvasFileName(),
+                    setCanvasBackgroundImage,
+                    function (error) {
+                        setCanvasBackgroundImage(datasetUrl());
+                    }
+                )
+            } catch (e) {
+                console.log(e);
+                setCanvasBackgroundImage(datasetUrl());
+            }
+
             currentStateIndex = stateIndex;
             isUpdateOperation = true;
         });
@@ -325,6 +340,7 @@ $(function () {
     function loadCanvasImage() {
         canvas.backgroundImage = false;
         canvas.clear();
+
         setCanvasBackgroundImage(datasetUrl()); // 先设置图，防止读取失败没有图
         try {
             readCanvasImage(
@@ -338,8 +354,10 @@ $(function () {
         } catch (e) {
             console.log(e);
             setCanvasBackgroundImage(datasetUrl());
+            clearCanvasState();
             updateCanvasState();
         }
+        clearCanvasState();
         updateCanvasState();
     }
     function setCanvasBrushColor(color) {
@@ -392,7 +410,7 @@ $(function () {
         $("#correct-description").val("");
         updateCorrectInsight();
 
-        // 读入下一图
+        // 清空并读入下一图
         loadCanvasImage();
     }
     function previousInsight() {
