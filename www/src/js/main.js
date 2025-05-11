@@ -38,6 +38,8 @@ $(document).on("vmousemove", "body", function (e) {
 // })
 
 // -------------------------global-------------------------
+
+var flagInitFinish = false; // 初始化完成标志
 const insight_dataset = insight_ChartToText;
 const maxId = insight_dataset.length;
 var currentId = 1;
@@ -45,7 +47,14 @@ var currentInsightObj;
 const maxBrushWidth = 36;
 var defaultBrush = "#ea484d05"; // 前六位为颜色，后二位转为粗细
 
-// -------------------------nvBench-------------------------
+// -------------------------Canvas-------------------------
+
+var canvas = null;
+var canvasState = [];
+var currentStateIndex = -1;
+var isUpdateOperation = true; // 防止撤销和恢复被存入画布状态栈
+
+// -------------------------global-------------------------
 
 function datasetUrl() {
     // 4.svg
@@ -149,13 +158,253 @@ function updateCorrectInsight() {
             $("#insight-text-type").css("opacity", "1");
             $("#insight-text-type").css("text-decoration-line", "none");
             $("#insight-text-correct-type").text("");
-            
+
             // 更新纠正编辑
             // $("#prompt-report-bad-data").text("Mark it as bad data?");
             $("#select-type").val(currentInsightObj.type);
             $("#correct-description").val("");
         }
     );
+}
+
+// -------------------------Canvas-------------------------
+
+function updateCanvasState() {
+    if (isUpdateOperation) {
+        let canvasAsJson = JSON.stringify(canvas.toJSON());
+        canvasState.splice(currentStateIndex + 1);
+        canvasState.push(canvasAsJson);
+        currentStateIndex = canvasState.length - 1;
+        console.log(canvasState, currentStateIndex, "update");
+    } else {
+        // isUpdateOperation = true;
+    }
+}
+function loadCanvasState(stateIndex) {
+    isUpdateOperation = false;
+    canvas.loadFromJSON(JSON.parse(canvasState[stateIndex]), () => {
+        canvas.renderAll();
+
+        // DEBUG
+        try {
+            readCanvasImage(
+                canvasFileName(),
+                setCanvasBackgroundImage,
+                function (error) {
+                    setCanvasBackgroundImage(datasetUrl());
+                }
+            )
+        } catch (e) {
+            console.log(e);
+            setCanvasBackgroundImage(datasetUrl());
+        }
+
+        currentStateIndex = stateIndex;
+        isUpdateOperation = true;
+    });
+    console.log(canvasState, currentStateIndex, "load");
+}
+function clearCanvasState() {
+    canvasState = [];
+    currentStateIndex = -1;
+    isUpdateOperation = true;
+}
+function undoCanvas() {
+    if (currentStateIndex > 0) {
+        loadCanvasState(currentStateIndex - 1);
+    }
+}
+function redoCanvas() {
+    if (currentStateIndex < canvasState.length - 1) {
+        loadCanvasState(currentStateIndex + 1);
+    }
+}
+function clearCanvas() {
+    if (confirm('Are you sure to clear canvas?')) {
+        canvas.backgroundImage = false;
+        canvas.clear();
+        clearCanvasState();
+
+        setCanvasBackgroundImage(datasetUrl());
+        updateCanvasState();
+        // saveCanvas();
+
+    }
+}
+function saveCanvas() {
+    // writeSketchedImage(canvasFileName(), canvas.toDataURL());
+    writeSketchedImage(canvasFileName(), canvas.toSVG());
+}
+function setCanvasBackgroundPng(img) {
+    // 根据图片 URL 或 dataURL 设置画布背景图片
+
+    fabric.Image.fromURL(img, function (oImg) {
+        // 缩小图片至正好能放入画布
+        var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
+        oImg.scale(scale);
+
+        // 居中放置背景图片
+        canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas), {
+            originX: 'center',
+            originY: 'center',
+            left: canvas.width / 2,
+            top: canvas.height / 2,
+            backgroundImageStretch: false
+        });
+    }, { crossOrigin: 'anonymous' });
+}
+function setCanvasBackgroundSvgFromUrl(url) {
+    // 根据 svg URL 设置画布背景图片
+    // 不触发object:added
+    // url：svg url
+
+    fabric.loadSVGFromURL(url, function (objects, options) {
+        // 打包成一个对象
+        var obj = fabric.util.groupSVGElements(objects, options);
+
+        // 调整图片大小至正好能放入画布
+        var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
+        obj.scale(scale);
+
+        // 放置背景图片
+        canvas.backgroundImage = false;
+        canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
+            // 居中
+            originX: 'center',
+            originY: 'center',
+            left: canvas.width / 2,
+            top: canvas.height / 2,
+            backgroundImageStretch: false
+        });
+    });
+}
+function setCanvasBackgroundSvgFromString(svgString) {
+    // 根据 svg 文件内容字符串设置画布背景图片
+
+    fabric.loadSVGFromString(svgString, function (objects, options) {
+        // 打包成一个对象
+        var obj = fabric.util.groupSVGElements(objects, options);
+
+        // 调整图片大小至正好能放入画布
+        var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
+        obj.scale(scale);
+
+        // 放置背景图片
+        canvas.backgroundImage = false;
+        canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
+            // 居中
+            originX: 'center',
+            originY: 'center',
+            left: canvas.width / 2,
+            top: canvas.height / 2,
+            backgroundImageStretch: false
+        });
+    });
+}
+function setCanvasBackgroundImage(img) {
+    // 设置画布背景图片
+    // 不触发object:added
+    // img：img.src(png/svg) | dataURL
+
+    if (typeof img === "object") {
+        // vega_lite Object
+        vegaLiteSpecToSvg(img, setCanvasBackgroundSvgFromString);
+    } else if (img.endsWith(".svg")) {
+        // svg 文件
+        setCanvasBackgroundSvgFromUrl(img);
+    } else if (img.endsWith("_vega_lite.json")) {
+        // vega_lite JSON 文件
+        // alert(`img.endsWith("_vega_lite.json")`);
+        $.getJSON(img, function (vlSpec) {
+            vegaLiteSpecToSvg(vlSpec, setCanvasBackgroundSvgFromString);
+        });
+
+    } else if (img.endsWith("png")) {
+        setCanvasBackgroundPng(img);
+    } else {
+        // svg 字符串
+        setCanvasBackgroundSvgFromString(img);
+    }
+}
+function loadCanvasImage() {
+    canvas.backgroundImage = false;
+    canvas.clear();
+
+    setCanvasBackgroundImage(datasetUrl()); // 先设置图，防止读取失败没有图
+    try {
+        readCanvasImage(
+            canvasFileName(),
+            setCanvasBackgroundImage,
+            function (error) {
+                // alert(error);
+                // throw new Error(error);
+            }
+        )
+    } catch (e) {
+        console.log(e);
+        setCanvasBackgroundImage(datasetUrl());
+        clearCanvasState();
+        updateCanvasState();
+    }
+    clearCanvasState();
+    updateCanvasState();
+}
+function setCanvasBrushColor(color) {
+    canvas.freeDrawingBrush.color = color;
+}
+function setCanvasBrushWidth(width) {
+    canvas.freeDrawingBrush.width = width;
+}
+
+// -------------------------Insight-------------------------
+
+function updateInsight(id) {
+    // 若已经初始化并且开启了自动保存模式，保存上一图和纠正insight
+    if (flagInitFinish && flagAutoSaveCanvas) {
+        saveCorrectInsight();
+        saveCanvas();
+    }
+
+    // 更新currentId, currentInsightObj
+    currentId = id;
+    currentInsightObj = insight_dataset[currentId - 1]; // 数组下标从 0 开始
+
+    // 更新页面文本
+    $("#current-id").val(currentId);
+    $("#insight-text-id").text(currentInsightObj.key);
+    // 若 currentInsightObj 没有type，则赋空值
+    if (!currentInsightObj.type) {
+        currentInsightObj.type = "";
+    }
+    $("#insight-text-type").text(currentInsightObj.type);
+    $("#insight-text-description").text(currentInsightObj.description);
+
+    // 更新纠正
+    // $("#select-type").val(currentInsightObj.type);
+    // $("#correct-description").val("");
+    updateCorrectInsight();
+
+    // 清空并读入下一图
+    loadCanvasImage();
+
+    // 初始化完成
+    flagInitFinish = true;
+}
+function previousInsight() {
+    // console.log(typeof currentId, currentId); // string
+    currentId = parseInt(currentId);
+    if (currentId > 1) {
+        // 更新上一图
+        updateInsight(currentId - 1);
+    }
+}
+function nextInsight() {
+    // console.log(typeof currentId, currentId); // string
+    currentId = parseInt(currentId);
+    if (currentId < maxId) {
+        // 更新下一图
+        updateInsight(currentId + 1);
+    }
 }
 
 
@@ -168,204 +417,13 @@ $(function () {
     $("#max-id").text(maxId);
 
 
-
-
-
     // -------------------------Canvas-------------------------
+
     // create a canvas 创建画布
     insertCanvasHtml();
-    var canvas = new fabric.Canvas('c', {
+    canvas = new fabric.Canvas('c', {
         isDrawingMode: true
     });
-    var canvasState = [];
-    var currentStateIndex = -1;
-    var isUpdateOperation = true; // 防止撤销和恢复被存入画布状态栈
-    function updateCanvasState() {
-        if (isUpdateOperation) {
-            let canvasAsJson = JSON.stringify(canvas.toJSON());
-            canvasState.splice(currentStateIndex + 1);
-            canvasState.push(canvasAsJson);
-            currentStateIndex = canvasState.length - 1;
-            console.log(canvasState, currentStateIndex, "update");
-        } else {
-            // isUpdateOperation = true;
-        }
-    }
-    function loadCanvasState(stateIndex) {
-        isUpdateOperation = false;
-        canvas.loadFromJSON(JSON.parse(canvasState[stateIndex]), () => {
-            canvas.renderAll();
-            
-            // DEBUG
-            try {
-                readCanvasImage(
-                    canvasFileName(),
-                    setCanvasBackgroundImage,
-                    function (error) {
-                        setCanvasBackgroundImage(datasetUrl());
-                    }
-                )
-            } catch (e) {
-                console.log(e);
-                setCanvasBackgroundImage(datasetUrl());
-            }
-
-            currentStateIndex = stateIndex;
-            isUpdateOperation = true;
-        });
-        console.log(canvasState, currentStateIndex, "load");
-    }
-    function clearCanvasState() {
-        canvasState = [];
-        currentStateIndex = -1;
-        isUpdateOperation = true;
-    }
-    function undoCanvas() {
-        if (currentStateIndex > 0) {
-            loadCanvasState(currentStateIndex - 1);
-        }
-    }
-    function redoCanvas() {
-        if (currentStateIndex < canvasState.length - 1) {
-            loadCanvasState(currentStateIndex + 1);
-        }
-    }
-    function clearCanvas() {
-        if (confirm('Are you sure to clear canvas?')) {
-            canvas.backgroundImage = false;
-            canvas.clear();
-            clearCanvasState();
-
-            setCanvasBackgroundImage(datasetUrl());
-            updateCanvasState();
-            // saveCanvas();
-
-        }
-    }
-    function saveCanvas() {
-        // writeSketchedImage(canvasFileName(), canvas.toDataURL());
-        writeSketchedImage(canvasFileName(), canvas.toSVG());
-    }
-    function setCanvasBackgroundPng(img) {
-        // 根据图片 URL 或 dataURL 设置画布背景图片
-
-        fabric.Image.fromURL(img, function (oImg) {
-            // 缩小图片至正好能放入画布
-            var scale = Math.min(canvas.width / oImg.width, canvas.height / oImg.height);
-            oImg.scale(scale);
-
-            // 居中放置背景图片
-            canvas.setBackgroundImage(oImg, canvas.renderAll.bind(canvas), {
-                originX: 'center',
-                originY: 'center',
-                left: canvas.width / 2,
-                top: canvas.height / 2,
-                backgroundImageStretch: false
-            });
-        }, { crossOrigin: 'anonymous' });
-    }
-    function setCanvasBackgroundSvgFromUrl(url) {
-        // 根据 svg URL 设置画布背景图片
-        // 不触发object:added
-        // url：svg url
-
-        fabric.loadSVGFromURL(url, function (objects, options) {
-            // 打包成一个对象
-            var obj = fabric.util.groupSVGElements(objects, options);
-
-            // 调整图片大小至正好能放入画布
-            var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
-            obj.scale(scale);
-
-            // 放置背景图片
-            canvas.backgroundImage = false;
-            canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
-                // 居中
-                originX: 'center',
-                originY: 'center',
-                left: canvas.width / 2,
-                top: canvas.height / 2,
-                backgroundImageStretch: false
-            });
-        });
-    }
-    function setCanvasBackgroundSvgFromString(svgString) {
-        // 根据 svg 文件内容字符串设置画布背景图片
-
-        fabric.loadSVGFromString(svgString, function (objects, options) {
-            // 打包成一个对象
-            var obj = fabric.util.groupSVGElements(objects, options);
-
-            // 调整图片大小至正好能放入画布
-            var scale = Math.min(canvas.width / obj.width, canvas.height / obj.height);
-            obj.scale(scale);
-
-            // 放置背景图片
-            canvas.backgroundImage = false;
-            canvas.setBackgroundImage(obj, canvas.renderAll.bind(canvas), {
-                // 居中
-                originX: 'center',
-                originY: 'center',
-                left: canvas.width / 2,
-                top: canvas.height / 2,
-                backgroundImageStretch: false
-            });
-        });
-    }
-    function setCanvasBackgroundImage(img) {
-        // 设置画布背景图片
-        // 不触发object:added
-        // img：img.src(png/svg) | dataURL
-
-        if (typeof img === "object") {
-            // vega_lite Object
-            vegaLiteSpecToSvg(img, setCanvasBackgroundSvgFromString);
-        } else if (img.endsWith(".svg")) {
-            // svg 文件
-            setCanvasBackgroundSvgFromUrl(img);
-        } else if (img.endsWith("_vega_lite.json")) {
-            // vega_lite JSON 文件
-            // alert(`img.endsWith("_vega_lite.json")`);
-            $.getJSON(img, function (vlSpec) {
-                vegaLiteSpecToSvg(vlSpec, setCanvasBackgroundSvgFromString);
-            });
-
-        } else if (img.endsWith("png")) {
-            setCanvasBackgroundPng(img);
-        } else {
-            // svg 字符串
-            setCanvasBackgroundSvgFromString(img);
-        }
-    }
-    function loadCanvasImage() {
-        canvas.backgroundImage = false;
-        canvas.clear();
-
-        setCanvasBackgroundImage(datasetUrl()); // 先设置图，防止读取失败没有图
-        try {
-            readCanvasImage(
-                canvasFileName(),
-                setCanvasBackgroundImage,
-                function (error) {
-                    // alert(error);
-                    // throw new Error(error);
-                }
-            )
-        } catch (e) {
-            console.log(e);
-            setCanvasBackgroundImage(datasetUrl());
-            clearCanvasState();
-            updateCanvasState();
-        }
-        clearCanvasState();
-        updateCanvasState();
-    }
-    function setCanvasBrushColor(color) {
-        canvas.freeDrawingBrush.color = color;
-    }
-    function setCanvasBrushWidth(width) {
-        canvas.freeDrawingBrush.width = width;
-    }
     canvas.on("object:modified", updateCanvasState);
     canvas.on("object:added", updateCanvasState);
     // button-undo-canvas 按钮
@@ -383,59 +441,14 @@ $(function () {
         // $("#button-save-canvas").attr("download", "canvas");
     });
 
-    // -------------------------Insight-------------------------
-
-    function updateInsight(id) {
-        // 若开启了自动保存模式，保存上一图和纠正insight
-        if (flagAutoSaveCanvas) {
-            saveCorrectInsight();
-            saveCanvas();
-        }
-
-        // 更新currentId, currentInsightObj
-        currentId = id;
-        currentInsightObj = insight_dataset[currentId - 1]; // 数组下标从 0 开始
-
-        // 更新页面文本
-        $("#current-id").val(currentId);
-        $("#insight-text-id").text(currentInsightObj.key);
-        // 若 currentInsightObj 没有type，则赋空值
-        if (!currentInsightObj.type) {
-            currentInsightObj.type = "";
-        }
-        $("#insight-text-type").text(currentInsightObj.type);
-        $("#insight-text-description").text(currentInsightObj.description);
-
-        // 更新纠正
-        $("#select-type").val(currentInsightObj.type);
-        $("#correct-description").val("");
-        updateCorrectInsight();
-
-        // 清空并读入下一图
-        loadCanvasImage();
-    }
-    function previousInsight() {
-        // console.log(typeof currentId, currentId); // string
-        currentId = parseInt(currentId);
-        if (currentId > 1) {
-            // 更新上一图
-            updateInsight(currentId - 1);
-        }
-    }
-    function nextInsight() {
-        // console.log(typeof currentId, currentId); // string
-        currentId = parseInt(currentId);
-        if (currentId < maxId) {
-            // 更新下一图
-            updateInsight(currentId + 1);
-        }
-    }
+    
     $("#previous").click(previousInsight);
     $("#next").click(nextInsight);
     // 初始化
     updateInsight(1);
 
     // -------------------------Color Picker-------------------------
+    
     var colorPicker = new iro.ColorPicker('#color-picker', {
         color: defaultBrush,
         // padding: 0,
@@ -511,5 +524,4 @@ $(function () {
     //     return false;
     // });
 
-    // updateCorrectInsight();
 });

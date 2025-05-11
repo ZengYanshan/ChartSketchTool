@@ -307,14 +307,14 @@ function deleteCorrectDescription(fileName, successCallback) {
                 // toast("unmarked");
                 successCallback();
             }, onErrorRemoveFile);
-        }, onErrorGetFile);
+        }, blank);
 
         // 从外部删除
         fs.root.getFile(publicFilePath, { create: false }, function (fileEntry) {
             fileEntry.remove(function () {
                 // toast("unmarked");
             }, onErrorRemoveFile);
-        }, onErrorGetFile);
+        }, blank);
 
     }, onErrorLoadFs);
 }
@@ -431,4 +431,8 @@ function onErrorGetFile(error) {
 
 function onErrorRemoveFile(error) {
     toast("failed to remove file", error.toString());
+}
+
+function blank() {
+
 }

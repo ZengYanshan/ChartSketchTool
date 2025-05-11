@@ -95,8 +95,8 @@ function updateCurrentUser(username) {
     // 更新显示的用户名
     document.getElementById("username").textContent = currentUsername;
 
-    // TODO 更新画布和Insight
-    // updateInsight();
+    // 更新画布和Insight
+    updateInsight(1);
 }
 
 function updateUserSelect(usernames) {
