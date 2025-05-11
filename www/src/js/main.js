@@ -386,8 +386,9 @@ $(function () {
     // -------------------------Insight-------------------------
 
     function updateInsight(id) {
-        // 若开启了自动保存模式，保存上一图
+        // 若开启了自动保存模式，保存上一图和纠正insight
         if (flagAutoSaveCanvas) {
+            saveCorrectInsight();
             saveCanvas();
         }
 
