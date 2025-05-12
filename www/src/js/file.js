@@ -48,6 +48,12 @@ function convertTspansToText(svg) {
 
         // 获取 <text> 元素的所有属性
         const textAttributes = Array.from(textElement.attributes);
+        // 对 dx, dy 等需要累加的属性进行特殊处理
+        let accumulativeAttributes = {
+            dx: textElement.hasAttribute('dx') ? textElement.getAttribute('dx') : 0,
+            dy: textElement.hasAttribute('dy') ? textElement.getAttribute('dy') : 0,
+        };
+        // console.log("init accumulativeAttributes: ", accumulativeAttributes);
 
         // 查找<text>元素内的所有<tspan>元素
         const tspanElements = textElement.querySelectorAll('tspan');
@@ -68,47 +74,26 @@ function convertTspansToText(svg) {
                 // 复制 <tspan> 的属性到新的 <text>
                 const tspanAttributes = Array.from(tspanElement.attributes);
                 tspanAttributes.forEach(attr => {
-                    // 若 <text> 已有该属性，则求和
-                    if (textElementFromTspan.hasAttribute(attr.name)) {
-                        textElementFromTspan.setAttribute(attr.name, `${parseFloat(textElement.getAttribute(attr.name))
-                            + parseFloat(tspanElement.getAttribute(attr.value))}`);
+                    // 对 dx, dy 等需要累加的属性进行特殊处理
+                    if (accumulativeAttributes.hasOwnProperty(attr.name)) {
+                        // 如果 <text> 元素有 dx 和 dy 属性，则累加
+                        accumulativeAttributes[attr.name] = parseFloat(accumulativeAttributes[attr.name]) + parseFloat(attr.value);
+                        textElementFromTspan.setAttribute(attr.name, `${accumulativeAttributes[attr.name]}`);
+                        // console.log("add accumulativeAttributes: ", accumulativeAttributes);
                     } else {
-                        textElementFromTspan.setAttribute(attr.name, attr.value);
+                        // 若 <text> 已有该属性，则求和
+                        if (textElementFromTspan.hasAttribute(attr.name)) {
+                            textElementFromTspan.setAttribute(attr.name, `${parseFloat(textElement.getAttribute(attr.name))
+                                + parseFloat(tspanElement.getAttribute(attr.value))}`);
+                        } else {
+                            textElementFromTspan.setAttribute(attr.name, attr.value);
+                        }
                     }
                 });
 
                 // 插入新的 <text> 元素到 DOM，与原本的 <text> 平级
                 textElement.parentNode.insertBefore(textElementFromTspan, textElement);
 
-                // // 获取<tspan>的文本内容
-                // const textContent = tspanElement.textContent;
-
-                // // 复制<tspan>的x和y属性到<text>
-                // if (tspanElement.hasAttribute('x')) {
-                //     if (textElement.hasAttribute('x')) {
-                //         textElement.setAttribute('x', `${parseFloat(textElement.getAttribute('x'))
-                //             + parseFloat(tspanElement.getAttribute('x'))}`
-                //         );
-                //     } else {
-                //         textElement.setAttribute('x', tspanElement.getAttribute('x'));
-                //     }
-                // }
-                // if (tspanElement.hasAttribute('y')) {
-                //     if (textElement.hasAttribute('y')) {
-                //         textElement.setAttribute('y', `${parseFloat(textElement.getAttribute('y'))
-                //             + parseFloat(tspanElement.getAttribute('y'))}`
-                //         );
-                //     }
-                //     else {
-                //         textElement.setAttribute('y', tspanElement.getAttribute('y'));
-                //     }
-                // }
-
-                // // 将<tspan>的文本内容设置到<text>元素中
-                // textElement.textContent = textContent;
-
-                // 移除<tspan>元素
-                // tspanElement.remove();
             });
             // 移除原始 <text> 元素（包括内部的 <tspan> 元素）
             textElement.remove();
