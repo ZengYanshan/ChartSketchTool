@@ -171,9 +171,10 @@ function updateCorrectInsight() {
 
 function updateCanvasState() {
     if (isUpdateOperation) {
-        let canvasAsJson = JSON.stringify(canvas.toJSON());
+        // let canvasStateSerialization = JSON.stringify(canvas.toJSON());
+        canvasStateSerialization = minifySvg(convertTspansToText(removeDesc(canvas.toSVG())));
         canvasState.splice(currentStateIndex + 1);
-        canvasState.push(canvasAsJson);
+        canvasState.push(canvasStateSerialization);
         currentStateIndex = canvasState.length - 1;
         console.log(canvasState, currentStateIndex, "update");
     } else {
@@ -181,33 +182,47 @@ function updateCanvasState() {
     }
 }
 function loadCanvasState(stateIndex) {
+    // console.log("call loadCanvasState(", stateIndex, ")");
     isUpdateOperation = false;
-    canvas.loadFromJSON(JSON.parse(canvasState[stateIndex]), () => {
-        canvas.renderAll();
+    // canvas.loadFromJSON(JSON.parse(canvasState[stateIndex]), () => {
+    //     canvas.renderAll();
 
-        // DEBUG
-        try {
-            readCanvasImage(
-                canvasFileName(),
-                setCanvasBackgroundImage,
-                function (error) {
-                    setCanvasBackgroundImage(datasetUrl());
-                }
-            )
-        } catch (e) {
-            console.log(e);
-            setCanvasBackgroundImage(datasetUrl());
-        }
+    //     // DEBUG
+    //     // try {
+    //     //     readCanvasImage(
+    //     //         canvasFileName(),
+    //     //         setCanvasBackgroundImage,
+    //     //         function (error) {
+    //     //             setCanvasBackgroundImage(datasetUrl());
+    //     //         }
+    //     //     )
+    //     // } catch (e) {
+    //     //     console.log(e);
+    //     //     setCanvasBackgroundImage(datasetUrl());
+    //     // }
+
+    //     currentStateIndex = stateIndex;
+    //     isUpdateOperation = true;
+    // });
+    fabric.loadSVGFromString(canvasState[stateIndex], function (objects, options) {
+        // 打包成一个对象
+        var obj = fabric.util.groupSVGElements(objects, options);
+        canvas.clear();
+        canvas.add(obj).renderAll();
 
         currentStateIndex = stateIndex;
         isUpdateOperation = true;
+
+        console.log(canvasState, currentStateIndex, "load");
     });
-    console.log(canvasState, currentStateIndex, "load");
+    
 }
 function clearCanvasState() {
+    isUpdateOperation = false;
     canvasState = [];
     currentStateIndex = -1;
     isUpdateOperation = true;
+    console.log(canvasState, currentStateIndex, "clear");
 }
 function undoCanvas() {
     if (currentStateIndex > 0) {
@@ -365,6 +380,9 @@ function updateInsight(id) {
         saveCanvas();
     }
 
+    // 清空并读入下一图
+    loadCanvasImage();
+
     // 更新currentId, currentInsightObj
     currentId = id;
     currentInsightObj = insight_dataset[currentId - 1]; // 数组下标从 0 开始
@@ -384,8 +402,7 @@ function updateInsight(id) {
     // $("#correct-description").val("");
     updateCorrectInsight();
 
-    // 清空并读入下一图
-    loadCanvasImage();
+    
 
     // 初始化完成
     flagInitFinish = true;
