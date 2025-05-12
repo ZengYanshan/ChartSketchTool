@@ -96,7 +96,7 @@ function updateCurrentUser(username) {
     document.getElementById("username").textContent = currentUsername;
 
     // 更新画布和Insight
-    updateInsight(1);
+    updateScene(1);
 }
 
 function updateUserSelect(usernames) {
