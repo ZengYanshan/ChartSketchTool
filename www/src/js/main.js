@@ -342,6 +342,7 @@ function setCanvasBackgroundImage(img) {
     }
 }
 function loadCanvasImage() {
+    isUpdateOperation = false;
     canvas.backgroundImage = false;
     canvas.clear();
 
@@ -358,11 +359,12 @@ function loadCanvasImage() {
     } catch (e) {
         console.log(e);
         setCanvasBackgroundImage(datasetUrl());
-        clearCanvasState();
-        updateCanvasState();
+        // clearCanvasState();
+        // updateCanvasState();
     }
     clearCanvasState();
     updateCanvasState();
+    isUpdateOperation = true;
 }
 function setCanvasBrushColor(color) {
     canvas.freeDrawingBrush.color = color;
@@ -373,19 +375,19 @@ function setCanvasBrushWidth(width) {
 
 // -------------------------Insight-------------------------
 
-function updateInsight(id) {
+function updateScene(id) {
     // 若已经初始化并且开启了自动保存模式，保存上一图和纠正insight
     if (flagInitFinish && flagAutoSaveCanvas) {
         saveCorrectInsight();
         saveCanvas();
     }
 
-    // 清空并读入下一图
-    loadCanvasImage();
-
     // 更新currentId, currentInsightObj
     currentId = id;
     currentInsightObj = insight_dataset[currentId - 1]; // 数组下标从 0 开始
+
+    // 清空并读入下一图
+    loadCanvasImage();
 
     // 更新页面文本
     $("#current-id").val(currentId);
@@ -412,7 +414,7 @@ function previousInsight() {
     currentId = parseInt(currentId);
     if (currentId > 1) {
         // 更新上一图
-        updateInsight(currentId - 1);
+        updateScene(currentId - 1);
     }
 }
 function nextInsight() {
@@ -420,7 +422,7 @@ function nextInsight() {
     currentId = parseInt(currentId);
     if (currentId < maxId) {
         // 更新下一图
-        updateInsight(currentId + 1);
+        updateScene(currentId + 1);
     }
 }
 
@@ -462,7 +464,7 @@ $(function () {
     $("#previous").click(previousInsight);
     $("#next").click(nextInsight);
     // 初始化
-    updateInsight(1);
+    updateScene(1);
 
     // -------------------------Color Picker-------------------------
     
@@ -515,7 +517,7 @@ $(function () {
         if (key == 13) {
             var inputCurrentId = $("#current-id").val();
             if (inputCurrentId > 0 && inputCurrentId <= maxId) {
-                updateInsight(inputCurrentId);
+                updateScene(inputCurrentId);
             }
         }
     });
