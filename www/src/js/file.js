@@ -40,42 +40,73 @@ function convertTspansToText(svg) {
     const textElements = doc.querySelectorAll('text');
 
     textElements.forEach(textElement => {
+        // 获取 <text> 元素的所有属性
+        const textAttributes = Array.from(textElement.attributes);
+
         // 查找<text>元素内的所有<tspan>元素
         const tspanElements = textElement.querySelectorAll('tspan');
 
-        tspanElements.forEach(tspanElement => {
-            // 获取<tspan>的文本内容
-            const textContent = tspanElement.textContent;
+        if (tspanElements.length > 0) {
 
-            // 复制<tspan>的x和y属性到<text>
-            if (tspanElement.hasAttribute('x')) {
-                if (textElement.hasAttribute('x')) {
-                    textElement.setAttribute('x', `${parseFloat(textElement.getAttribute('x'))
-                        + parseFloat(tspanElement.getAttribute('x'))}`
-                    );
-                } else {
-                    textElement.setAttribute('x', tspanElement.getAttribute('x'));
-                }
-            }
-            if (tspanElement.hasAttribute('y')) {
-                if (textElement.hasAttribute('y')) {
-                    textElement.setAttribute('y', `${parseFloat(textElement.getAttribute('y'))
-                        + parseFloat(tspanElement.getAttribute('y'))}`
-                    );
-                }
-                else {
-                    textElement.setAttribute('y', tspanElement.getAttribute('y'));
-                }
-            }
+            tspanElements.forEach(tspanElement => {
+                // 创建 <tspan> 对应的 <text> 元素
+                const textElementFromTspan = document.createElement('text');
 
-            // 将<tspan>的文本内容设置到<text>元素中
-            textElement.textContent = textContent;
+                // 复制原 <text> 的属性到新的 <text>
+                textAttributes.forEach(attr => {
+                    textElementFromTspan.setAttribute(attr.name, attr.value);
+                });
 
-            // 移除<tspan>元素
-            tspanElement.remove();
+                // 复制 <tspan> 的内容到新的 <text>
+                textElementFromTspan.textContent = tspanElement.textContent;
+                // 复制 <tspan> 的属性到新的 <text>
+                const tspanAttributes = Array.from(tspanElement.attributes);
+                tspanAttributes.forEach(attr => {
+                    // 若 <text> 已有该属性，则求和
+                    if (textElementFromTspan.hasAttribute(attr.name)) {
+                        textElementFromTspan.setAttribute(attr.name, `${parseFloat(textElement.getAttribute(attr.name))
+                            + parseFloat(tspanElement.getAttribute(attr.value))}`);
+                    } else {
+                        textElementFromTspan.setAttribute(attr.name, attr.value);
+                    }
+                });
 
-            // 注意：<text>元素内的所有其他子元素（如果有的话）都被删除，该函数仅适用于本项目情况
-        });
+                // 插入新的 <text> 元素到 DOM，与原本的 <text> 平级
+                textElement.parentNode.insertBefore(textElementFromTspan, textElement);
+
+                // // 获取<tspan>的文本内容
+                // const textContent = tspanElement.textContent;
+
+                // // 复制<tspan>的x和y属性到<text>
+                // if (tspanElement.hasAttribute('x')) {
+                //     if (textElement.hasAttribute('x')) {
+                //         textElement.setAttribute('x', `${parseFloat(textElement.getAttribute('x'))
+                //             + parseFloat(tspanElement.getAttribute('x'))}`
+                //         );
+                //     } else {
+                //         textElement.setAttribute('x', tspanElement.getAttribute('x'));
+                //     }
+                // }
+                // if (tspanElement.hasAttribute('y')) {
+                //     if (textElement.hasAttribute('y')) {
+                //         textElement.setAttribute('y', `${parseFloat(textElement.getAttribute('y'))
+                //             + parseFloat(tspanElement.getAttribute('y'))}`
+                //         );
+                //     }
+                //     else {
+                //         textElement.setAttribute('y', tspanElement.getAttribute('y'));
+                //     }
+                // }
+
+                // // 将<tspan>的文本内容设置到<text>元素中
+                // textElement.textContent = textContent;
+
+                // 移除<tspan>元素
+                // tspanElement.remove();
+            });
+            // 移除原始 <text> 元素（包括内部的 <tspan> 元素）
+            textElement.remove();
+        }
     });
 
     // 序列化修改后的DOM

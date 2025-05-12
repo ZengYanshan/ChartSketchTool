@@ -94,6 +94,7 @@ function vegaLiteSpecToSvg(vlSpec, successCallback) {
         view.toSVG().then(function (svg) {
             // console.log(svg);
             // toast(svg);
+            svg = minifySvg(convertTspansToText(removeDesc(svg)));
             successCallback(svg);
             // return svg;
 
@@ -327,9 +328,8 @@ function setCanvasBackgroundImage(img) {
     } else if (img.endsWith(".svg")) {
         // svg 文件
         setCanvasBackgroundSvgFromUrl(img);
-    } else if (img.endsWith("_vega_lite.json")) {
-        // vega_lite JSON 文件
-        // alert(`img.endsWith("_vega_lite.json")`);
+    } else if (img.endsWith(".json")) {
+        // Vega-Lite JSON 文件
         $.getJSON(img, function (vlSpec) {
             vegaLiteSpecToSvg(vlSpec, setCanvasBackgroundSvgFromString);
         });
