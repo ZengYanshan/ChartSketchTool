@@ -8,8 +8,9 @@ function path(dir, name) {
 }
 
 function minifySvg(svgString) {
-    // 使用正则表达式去除空格、制表符、换行符和回车符，但保留标签之间的空格
+    // 使用正则表达式去除空格、制表符、换行符和回车符，但保留标签之间的空格；去除 <text> xmlns 属性
     return svgString
+        .replace(/<text\s+xmlns="[^"]*"/g, '<text')
         .replace(/>\s+</g, '><') // 去除标签之间的空白符
         .replace(/[\t\n\r]/g, '') // 去除制表符、换行符和回车符
         .replace(/\s{2,}/g, ' ') // 将多个空格替换为单个空格
@@ -40,6 +41,11 @@ function convertTspansToText(svg) {
     const textElements = doc.querySelectorAll('text');
 
     textElements.forEach(textElement => {
+        // 去除 xmlns 属性
+        // if (textElement.hasAttribute('xmlns')) {
+        //     textElement.removeAttribute('xmlns');
+        // }
+
         // 获取 <text> 元素的所有属性
         const textAttributes = Array.from(textElement.attributes);
 
@@ -106,6 +112,9 @@ function convertTspansToText(svg) {
             });
             // 移除原始 <text> 元素（包括内部的 <tspan> 元素）
             textElement.remove();
+        } else {
+            // 如果没有<tspan>元素，直接保留原始<text>元素
+
         }
     });
 
