@@ -72,13 +72,19 @@ function datasetUrl() {
     return url;
 }
 function canvasFileName() {
-    // 4_1_sketched.svg
+    // 4_sketched.svg
     var fileName = `${currentId}_sketched.svg`;
     return fileName;
 }
 
+function canvasFileNamePng() {
+    // 4_sketched.png
+    var fileName = `${currentId}_sketched.png`;
+    return fileName;
+}
+
 function correctInsightFileName() {
-    // 4_1_correct_insight.json
+    // 4_correct_insight.json
     var filename = `${currentId}_correct_insight.json`;
     return filename;
 }
@@ -248,8 +254,8 @@ function clearCanvas() {
     }
 }
 function saveCanvas() {
-    // writeSketchedImage(canvasFileName(), canvas.toDataURL());
-    writeSketchedImage(canvasFileName(), canvas.toSVG());
+    writeSketchedImageAsSvg(canvasFileName(), canvas.toSVG());
+    writeSketchedImageAsPng(canvasFileNamePng(), canvas.toDataURL());
 }
 function setCanvasBackgroundPng(img) {
     // 根据图片 URL 或 dataURL 设置画布背景图片

@@ -129,7 +129,7 @@ function svg2Blob(svg) {
 
 
 // 保存sketched.svg
-function writeSketchedImage(fileName, data) {
+function writeSketchedImageAsSvg(fileName, data) {
     // 准备数据
     // var dataObj = dataURL2Blob(data);
     var newSvg = minifySvg(convertTspansToText(removeDesc(data))); // DEBUG：修复fabric.js文本偏移问题
@@ -167,6 +167,35 @@ function writeSketchedImage(fileName, data) {
                                 writeFile(fileEntry, dataObj,
                                     function () {
                                         toast("save to " + fileEntry.fullPath.toString());
+                                    }, onErrorWriteFile
+                                );
+                            }, onErrorCreateFile
+                        );
+                    })
+            }, onErrorGetDir);
+
+    }, onErrorLoadFs);
+}
+
+// 保存sketched.png
+function writeSketchedImageAsPng(fileName, data) {
+    // 准备数据
+    var dataObj = dataURL2Blob(data);
+
+    // 准备路径
+    var publicRootDir = "Download/ChartSketchTool";
+
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
+        // 保存到外部
+        fs.root.getDirectory(publicRootDir, { create: true },
+            function (rootDirEntry) {
+                rootDirEntry.getDirectory(currentUsername, { create: true },
+                    function (dirEntry) {
+                        dirEntry.getFile(fileName, { create: true, exclusive: false },
+                            function (fileEntry) {
+                                writeFile(fileEntry, dataObj,
+                                    function () {
+                                        // toast("save to " + fileEntry.fullPath.toString());
                                     }, onErrorWriteFile
                                 );
                             }, onErrorCreateFile
