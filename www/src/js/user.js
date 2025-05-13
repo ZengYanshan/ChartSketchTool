@@ -39,7 +39,7 @@ $(function () {
                 // 若合法，创建用户
                 createUser(newUsername);
                 // 创建成功，切换用户
-                updateCurrentUser(userSelect.value);
+                updateCurrentUser(newUsername);
                 hideUserContainer();
             }
         } else {
