@@ -25,13 +25,22 @@ $(function () {
             // 创建用户
             const newUsername = newUsernameInput.value.trim();
             const usernames = getSelectValues(userSelect);
-            if (newUsername && !usernames.includes(newUsername)) {
+
+            // 检查用户名是否合法
+            if (!newUsername) {
+                alter("Username cannot be empty.");
+            } else if (usernames.includes(newUsername)) {
+                alter("Username already exists.");
+            } else if (newUsername.includes(" ")) {
+                alter("Username cannot contain spaces.");
+            } else if (newUsername.includes("/")) {
+                alter("Username cannot contain '/'.");
+            } else {
+                // 若合法，创建用户
                 createUser(newUsername);
                 // 创建成功，切换用户
                 updateCurrentUser(userSelect.value);
                 hideUserContainer();
-            } else {
-                alert("Username is either empty or already exists.");
             }
         } else {
             // 用户已存在，切换用户
@@ -59,19 +68,24 @@ $(function () {
 
 function createUser(newUsername) {
     // 创建新用户目录
-    createUserDir(newUsername);
+    createUserDir(newUsername, function () {
+        // 下拉选择框添加新用户
+        const option = document.createElement("option");
+        option.value = newUsername;
+        option.textContent = newUsername;
+        userSelect.appendChild(option);
+        // 选中新用户
+        userSelect.value = newUsername;
 
-    // 下拉选择框添加新用户
-    const option = document.createElement("option");
-    option.value = newUsername;
-    option.textContent = newUsername;
-    userSelect.appendChild(option);
-    // 选中新用户
-    userSelect.value = newUsername;
+        // 清空并隐藏输入框
+        newUsernameInput.value = "";
+        newUsernameInput.style.display = "none";
+    }, function () {
+        // 创建失败
 
-    // 清空并隐藏输入框
-    newUsernameInput.value = "";
-    newUsernameInput.style.display = "none";
+    });
+
+    
 }
 
 

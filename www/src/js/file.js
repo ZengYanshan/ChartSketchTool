@@ -234,12 +234,13 @@ function listUserDir(successCallback) {
 }
 
 // 创建用户（即目录）
-function createUserDir(dirName) {
+function createUserDir(dirName, successCallback, errorCallback) {
     var privateDirPath = path("files-external", dirName);
     var publicDirPath = path("download", `ChartSketchTool/${dirName}`);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs) {
         fs.root.getDirectory(privateDirPath, { create: true }, function (dirEntry) {
             toast(`创建用户${dirName}成功`);
+            successCallback();
         }, onErrorGetDir);
         fs.root.getDirectory(publicDirPath, { create: true }, function (dirEntry) {
             // toast("创建文件夹成功：" + dirEntry.fullPath);
