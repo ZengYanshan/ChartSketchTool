@@ -78,8 +78,8 @@ function canvasFileName() {
 }
 
 function correctInsightFileName() {
-    // 4_1_correct_insight.txt
-    var filename = `${currentId}_${currentInsightObj.key}_correct_insight.txt`;
+    // 4_1_correct_insight.json
+    var filename = `${currentId}_${currentInsightObj.key}_correct_insight.json`;
     return filename;
 }
 
