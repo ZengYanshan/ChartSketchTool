@@ -73,13 +73,13 @@ function datasetUrl() {
 }
 function canvasFileName() {
     // 4_1_sketched.svg
-    var fileName = `${currentId}_${currentInsightObj.key}_sketched.svg`;
+    var fileName = `${currentId}_sketched.svg`;
     return fileName;
 }
 
 function correctInsightFileName() {
     // 4_1_correct_insight.json
-    var filename = `${currentId}_${currentInsightObj.key}_correct_insight.json`;
+    var filename = `${currentId}_correct_insight.json`;
     return filename;
 }
 
