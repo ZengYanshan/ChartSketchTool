@@ -122,6 +122,7 @@ function updateCorrectInsight() {
     // 查找文件以判断是否已标为不良数据；换页触发更新
     readCorrectInsight(correctInsightFileName(),
         function (correctInsightJson) {
+            // 若有纠正
             // 解析 JSON
             let correctInsightObj = JSON.parse(correctInsightJson);
 
@@ -132,20 +133,28 @@ function updateCorrectInsight() {
             if (correctInsightObj.description != "" && correctInsightObj.description != currentInsightObj.description) {
                 $("#insight-text-description").css("opacity", "0.8");
                 $("#insight-text-description").css("text-decoration-line", "line-through");
+                $("#insight-text-description-translation").css("opacity", "0.8");
+                $("#insight-text-description-translation").css("text-decoration-line", "line-through");
                 $("#insight-text-correct-description").text(correctInsightObj.description);
             } else {
                 $("#insight-text-description").css("opacity", "1");
                 $("#insight-text-description").css("text-decoration-line", "none");
+                $("#insight-text-description-translation").css("opacity", "1");
+                $("#insight-text-description-translation").css("text-decoration-line", "none");
                 $("#insight-text-correct-description").text("");
             }
             // 修改 type
             if (correctInsightObj.type != "" && correctInsightObj.type != currentInsightObj.type) {
                 $("#insight-text-type").css("opacity", "0.8");
                 $("#insight-text-type").css("text-decoration-line", "line-through");
+                $("#insight-text-type-translation").css("opacity", "0.8");
+                $("#insight-text-type-translation").css("text-decoration-line", "line-through");
                 $("#insight-text-correct-type").text(correctInsightObj.type);
             } else {
                 $("#insight-text-type").css("opacity", "1");
                 $("#insight-text-type").css("text-decoration-line", "none");
+                $("#insight-text-type-translation").css("opacity", "1");
+                $("#insight-text-type-translation").css("text-decoration-line", "none");
                 $("#insight-text-correct-type").text("");
             }
 
@@ -155,15 +164,20 @@ function updateCorrectInsight() {
             $("#correct-description").val(correctInsightObj.description);
         },
         function () {
+            // 若无纠正
             // 更新页面提示文本
             $("#prompt-correct-insight").text("If there is something wrong, click edit button to correct it.");
             // 修改 description
             $("#insight-text-description").css("opacity", "1");
             $("#insight-text-description").css("text-decoration-line", "none");
+            $("#insight-text-description-translation").css("opacity", "1");
+            $("#insight-text-description-translation").css("text-decoration-line", "none");
             $("#insight-text-correct-description").text("");
             // 修改 type
             $("#insight-text-type").css("opacity", "1");
             $("#insight-text-type").css("text-decoration-line", "none");
+            $("#insight-text-type-translation").css("opacity", "1");
+            $("#insight-text-type-translation").css("text-decoration-line", "none");
             $("#insight-text-correct-type").text("");
 
             // 更新纠正编辑
@@ -402,8 +416,13 @@ function updateScene(id) {
     if (!currentInsightObj.type) {
         currentInsightObj.type = "";
     }
+    if (!currentInsightObj.translation) {
+        currentInsightObj.translation = "";
+    }
     $("#insight-text-type").text(currentInsightObj.type);
+    $("#insight-text-type-translation").text(insightTypeTranslation[currentInsightObj.type] || "");
     $("#insight-text-description").text(currentInsightObj.description);
+    $("#insight-text-description-translation").text(currentInsightObj.translation);
 
     // 更新纠正
     // $("#select-type").val(currentInsightObj.type);
