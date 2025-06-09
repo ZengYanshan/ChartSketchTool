@@ -24,7 +24,7 @@ cordova plugin add cordova-plugin-x-toast
 
 # 1. 打包 默认会生成 aab 而不是 apk，需要命令指定
 cordova build android --release -- --packageType=apk
-cordova build android --release "--" --packageType=apk
+cordova build android --release "--" --packageType=apk #PS
 
 # 2. 对齐
 cd ./platforms/android/app/build/outputs/apk/release
