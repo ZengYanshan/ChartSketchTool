@@ -40,7 +40,7 @@ $(document).on("vmousemove", "body", function (e) {
 // -------------------------global-------------------------
 
 var flagInitFinish = false; // 初始化完成标志
-const insight_dataset = insight_ChartToText;
+const insight_dataset = insights;
 const maxId = insight_dataset.length;
 var currentId = 1;
 var currentInsightObj;
