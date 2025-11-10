@@ -36,7 +36,7 @@ keytool -genkey -v -alias keyname.keystore -keyalg RSA -validity 4000 -keystore 
 # 签名 (Java)
 # jarsigner -verbose -keystore keyname.keystore -signedjar app-signed.apk app-release-unsigned.apk keyname.keystore
 # jarsigner -verbose -keystore keyname.keystore -signedjar app-signed-aligned.apk app-release-unsigned-aligned.apk keyname.keystore
-path/to/apksigner sign --ks keyname.keystore --ks-key-alias keyname.keystore --ks-pass pass:123456 --out app-release-signed-aligned.apk app-release-unsigned-aligned.apk # D:\Android\SDK\build-tools\34.0.0\apksigner.bat
+path/to/apksigner sign --ks keyname.keystore --ks-key-alias keyname.keystore --ks-pass pass:yourpassword --out app-release-signed-aligned.apk app-release-unsigned-aligned.apk # D:\Android\SDK\build-tools\34.0.0\apksigner.bat
 
 # 4. 安装
 adb uninstall com.zys.chartsketchtool # 卸载已安装的 APP
